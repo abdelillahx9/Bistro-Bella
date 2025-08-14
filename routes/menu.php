@@ -4,6 +4,8 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\Menu\MenuController;
 use App\Http\Controllers\Admin\Menu\MenuCategoriesController;
 use App\Http\Controllers\Admin\Menu\MenuReviewsController;
+use App\Http\Controllers\Admin\Menu\MenuCommentsController;
+use App\Http\Controllers\Admin\Menu\MenuFavoritesController;
 
 // Group all admin routes
 Route::prefix('admin')->name('admin.')->middleware(['auth','verified','admin'])->group(function () {
@@ -26,4 +28,12 @@ Route::prefix('admin')->name('admin.')->middleware(['auth','verified','admin'])-
     // Menu reviews
     Route::get('menu/reviews', [MenuReviewsController::class, 'index'])->name('menu.reviews.index');
     Route::delete('menu/reviews/{review}', [MenuReviewsController::class, 'destroy'])->name('menu.reviews.destroy');
+
+    // Menu comments and favorites admin management
+    Route::get('menu/comments', [MenuCommentsController::class, 'index'])->name('menu.comments.index');
+    Route::delete('menu/comments/{comment}', [MenuCommentsController::class, 'destroy'])->name('menu.comments.destroy');
+
+    // favorites listing/deletion for admin
+    Route::get('menu/favorites', [MenuFavoritesController::class, 'index'])->name('menu.favorites.index');
+    Route::delete('menu/favorites/{favorite}', [MenuFavoritesController::class, 'destroy'])->name('menu.favorites.destroy');
 });
