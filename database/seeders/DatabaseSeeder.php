@@ -33,5 +33,8 @@ class DatabaseSeeder extends Seeder
             'password' => bcrypt('admin123'),
         ]);
         $adminUser->assignRole('admin');
+
+        // Seed menu categories
+        $this->call(\Database\Seeders\MenuCategorySeeder::class);
     }
 }
