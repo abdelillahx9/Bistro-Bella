@@ -25,13 +25,13 @@ export default function AuthenticatedLayout({ header, children }) {
                         Dashboard
                     </NavLink>
                     <NavLink
-                        href={route('admin.menu')}
-                        active={route().current('admin.menu')}
+                        href={route('admin.menu.index')}
+                        active={route().current('admin.menu.index')}
                         className="flex w-full items-center px-4 py-2 text-left text-sm font-medium"
                     >
                         Menu
                     </NavLink>
-                                        <NavLink
+                    <NavLink
                         href={route('admin.menu.categories.index')}
                         active={route().current('admin.menu.categories.index')}
                         className="flex w-full items-center px-4 py-2 text-left text-sm font-medium"

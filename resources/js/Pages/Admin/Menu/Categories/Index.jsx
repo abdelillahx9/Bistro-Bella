@@ -47,11 +47,15 @@ export default function CategoriesIndex({ categories, filters }) {
                                 <td className="px-4 py-2">{cat.description}</td>
                                 <td className="px-4 py-2 text-center">
                                     <Link href={route('admin.menu.categories.edit', cat.id)} className="text-blue-600">Edit</Link>
-                                    <form method="post" action={route('admin.menu.categories.destroy', cat.id)} className="inline-block ml-3">
-                                        <input type="hidden" name="_method" value="delete" />
-                                        <input type="hidden" name="_token" value={usePage().props.csrf} />
-                                        <button className="text-red-600">Delete</button>
-                                    </form>
+                                    <Link
+                                        href={route('admin.menu.categories.destroy', cat.id)}
+                                        method="delete"
+                                        as="button"
+                                        className="text-red-600 ml-3"
+                                        onClick={(e) => { if (!confirm('Delete this category?')) e.preventDefault(); }}
+                                    >
+                                        Delete
+                                    </Link>
                                 </td>
                             </tr>
                         ))}

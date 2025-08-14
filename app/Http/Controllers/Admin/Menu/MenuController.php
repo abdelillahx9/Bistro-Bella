@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Admin\Menu;
 
 use App\Http\Controllers\Controller;
+use App\Models\Menu;
+use App\Models\MenuCategory;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -12,8 +14,113 @@ class MenuController extends Controller
     /**
      * Display the admin menu.
      */
-    public function index(): Response
+    public function index(Request $request): Response
     {
-        return Inertia::render('Admin/Menu/index');
+        $query = Menu::with('category');
+
+        if ($search = $request->input('search')) {
+            $query->where('name', 'like', "%{$search}%")
+                  ->orWhere('slug', 'like', "%{$search}%")
+                  ->orWhere('description', 'like', "%{$search}%");
+        }
+
+        if ($category = $request->input('category')) {
+            $query->where('category_id', $category);
+        }
+
+        $menus = $query->orderBy('created_at', 'desc')->paginate(15)->withQueryString();
+
+        $categories = MenuCategory::orderBy('name')->get();
+
+        return Inertia::render('Admin/Menu/Index', [
+            'menus' => $menus,
+            'categories' => $categories,
+            'filters' => $request->only(['search', 'category']),
+        ]);
+    }
+
+    /**
+     * Show the form for creating a new menu item.
+     */
+    public function create()
+    {
+        $categories = MenuCategory::orderBy('name')->get();
+        return Inertia::render('Admin/Menu/Create', [
+            'categories' => $categories,
+        ]);
+    }
+
+    /**
+     * Store a newly created menu item in storage.
+     */
+    public function store(Request $request)
+    {
+        $data = $request->validate([
+            'category_id' => 'required|exists:menu_categories,id',
+            'name' => 'required|string|max:255',
+            'slug' => 'nullable|string|max:255|unique:menus,slug',
+            'description' => 'nullable|string',
+            'price' => 'required|numeric',
+            'image_path' => 'nullable|string|max:255',
+            'is_vegetarian' => 'sometimes|boolean',
+            'is_gluten_free' => 'sometimes|boolean',
+            'is_available' => 'sometimes|boolean',
+        ]);
+
+        if (empty($data['slug'])) {
+            $data['slug'] = \Illuminate\Support\Str::slug($data['name']);
+        }
+
+        Menu::create($data);
+
+        return redirect()->route('admin.menu.index');
+    }
+
+    /**
+     * Show the form for editing the specified menu item.
+     */
+    public function edit(Menu $menu)
+    {
+        $categories = MenuCategory::orderBy('name')->get();
+        return Inertia::render('Admin/Menu/Edit', [
+            'menu' => $menu,
+            'categories' => $categories,
+        ]);
+    }
+
+    /**
+     * Update the specified menu item in storage.
+     */
+    public function update(Request $request, Menu $menu)
+    {
+        $data = $request->validate([
+            'category_id' => 'required|exists:menu_categories,id',
+            'name' => 'required|string|max:255',
+            'slug' => 'nullable|string|max:255|unique:menus,slug,' . $menu->id,
+            'description' => 'nullable|string',
+            'price' => 'required|numeric',
+            'image_path' => 'nullable|string|max:255',
+            'is_vegetarian' => 'sometimes|boolean',
+            'is_gluten_free' => 'sometimes|boolean',
+            'is_available' => 'sometimes|boolean',
+        ]);
+
+        if (empty($data['slug'])) {
+            $data['slug'] = \Illuminate\Support\Str::slug($data['name']);
+        }
+
+        $menu->update($data);
+
+        return redirect()->route('admin.menu.index');
+    }
+
+    /**
+     * Remove the specified menu item from storage.
+     */
+    public function destroy(Menu $menu)
+    {
+        $menu->delete();
+
+        return redirect()->route('admin.menu.index');
     }
 }
