@@ -3,6 +3,7 @@
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\MenuController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
@@ -27,6 +28,10 @@ Route::get('/admin/dashboard', [DashboardController::class, 'index'])
     ->middleware(['auth', 'verified', 'admin'])
     ->name('admin.dashboard');
 
+Route::get('/admin/menu', [MenuController::class, 'index'])
+    ->middleware(['auth', 'verified', 'admin'])
+    ->name('admin.menu');
+
 // Keep the old dashboard route for backward compatibility (redirect to appropriate dashboard)
 Route::get('/dashboard', function () {
     $user = Auth::user();
@@ -42,4 +47,4 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';
