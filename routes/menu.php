@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\Menu\MenuController;
 use App\Http\Controllers\Admin\Menu\MenuCategoriesController;
+use App\Http\Controllers\Admin\Menu\MenuReviewsController;
 
 // Group all admin routes
 Route::prefix('admin')->name('admin.')->middleware(['auth','verified','admin'])->group(function () {
@@ -21,4 +22,8 @@ Route::prefix('admin')->name('admin.')->middleware(['auth','verified','admin'])-
     Route::get('menu/{menu}/edit', [MenuController::class, 'edit'])->name('menu.edit');
     Route::put('menu/{menu}', [MenuController::class, 'update'])->name('menu.update');
     Route::delete('menu/{menu}', [MenuController::class, 'destroy'])->name('menu.destroy');
+
+    // Menu reviews
+    Route::get('menu/reviews', [MenuReviewsController::class, 'index'])->name('menu.reviews.index');
+    Route::delete('menu/reviews/{review}', [MenuReviewsController::class, 'destroy'])->name('menu.reviews.destroy');
 });
