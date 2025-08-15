@@ -45,20 +45,6 @@ export default function AuthenticatedLayout({ header, children }) {
                     >
                         reviews
                     </NavLink>
-                                        <NavLink
-                        href={route('admin.menu.comments.index')}
-                        active={route().current('admin.menu.comments.index')}
-                        className="flex w-full items-center px-4 py-2 text-left text-sm font-medium"
-                    >
-                        comments
-                    </NavLink>
-                                                            <NavLink
-                        href={route('admin.menu.favorites.index')}
-                        active={route().current('admin.menu.favorites.index')}
-                        className="flex w-full items-center px-4 py-2 text-left text-sm font-medium"
-                    >
-                        favorites
-                    </NavLink>
 
                     {/* Add more NavLinks here as needed */}
                 </nav>
