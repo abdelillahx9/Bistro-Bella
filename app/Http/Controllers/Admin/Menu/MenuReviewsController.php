@@ -14,22 +14,44 @@ class MenuReviewsController extends Controller
     {
         $query = MenuReview::with(['menu', 'user']);
 
-        if ($menu = $request->input('menu')) {
-            $query->where('menu_id', $menu);
-        }
-
+        // Search by comment
         if ($search = $request->input('search')) {
             $query->where('comment', 'like', "%{$search}%");
         }
 
-        $reviews = $query->orderBy('created_at', 'desc')->paginate(20)->withQueryString();
+        // Filter by menu name
+        if ($menuName = $request->input('menu')) {
+            $query->whereHas('menu', function($q) use ($menuName) {
+                $q->where('name', 'like', "%{$menuName}%");
+            });
+        }
+
+        // Filter by user name
+        if ($userName = $request->input('user')) {
+            $query->whereHas('user', function($q) use ($userName) {
+                $q->where('name', 'like', "%{$userName}%");
+            });
+        }
+
+        // Sort by rating
+        if ($ratingSort = $request->input('rating_sort')) {
+            if ($ratingSort === 'asc') {
+                $query->orderBy('rating', 'asc');
+            } elseif ($ratingSort === 'desc') {
+                $query->orderBy('rating', 'desc');
+            }
+        } else {
+            $query->orderBy('created_at', 'desc');
+        }
+
+        $reviews = $query->paginate(15)->withQueryString();
 
         $menus = Menu::orderBy('name')->get();
 
         return Inertia::render('Admin/Menu/Reviews/Index', [
             'reviews' => $reviews,
             'menus' => $menus,
-            'filters' => $request->only(['menu', 'search']),
+            'filters' => $request->only(['search', 'menu', 'user', 'rating_sort']),
         ]);
     }
 
