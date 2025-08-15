@@ -104,7 +104,7 @@ export default function AuthenticatedLayout({ header, children }) {
                     </header>
                 )}
 
-                <main className="flex-1 overflow-y-auto overflow-x-hidden bg-gray-200">
+                <main className="flex-1 overflow-y-auto overflow-x-hidden bg-white">
                     <div className="container mx-auto px-6 py-8">
                         {children}
                     </div>
