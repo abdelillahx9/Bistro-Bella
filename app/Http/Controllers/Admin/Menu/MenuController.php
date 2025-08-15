@@ -61,7 +61,7 @@ class MenuController extends Controller
             'slug' => 'nullable|string|max:255|unique:menus,slug',
             'description' => 'nullable|string',
             'price' => 'required|numeric',
-            'image_path' => 'nullable|string|max:255',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             'is_vegetarian' => 'sometimes|boolean',
             'is_gluten_free' => 'sometimes|boolean',
             'is_available' => 'sometimes|boolean',
@@ -70,6 +70,17 @@ class MenuController extends Controller
         if (empty($data['slug'])) {
             $data['slug'] = \Illuminate\Support\Str::slug($data['name']);
         }
+
+        // Handle image upload
+        if ($request->hasFile('image')) {
+            $image = $request->file('image');
+            $imageName = time() . '_' . uniqid() . '.' . $image->getClientOriginalExtension();
+            $image->move(public_path('storage/menu-images'), $imageName);
+            $data['image_path'] = '/storage/menu-images/' . $imageName;
+        }
+
+        // Remove the 'image' key as we store it as 'image_path'
+        unset($data['image']);
 
         Menu::create($data);
 
@@ -99,7 +110,7 @@ class MenuController extends Controller
             'slug' => 'nullable|string|max:255|unique:menus,slug,' . $menu->id,
             'description' => 'nullable|string',
             'price' => 'required|numeric',
-            'image_path' => 'nullable|string|max:255',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             'is_vegetarian' => 'sometimes|boolean',
             'is_gluten_free' => 'sometimes|boolean',
             'is_available' => 'sometimes|boolean',
@@ -108,6 +119,22 @@ class MenuController extends Controller
         if (empty($data['slug'])) {
             $data['slug'] = \Illuminate\Support\Str::slug($data['name']);
         }
+
+        // Handle image upload
+        if ($request->hasFile('image')) {
+            // Delete old image if exists
+            if ($menu->image_path && file_exists(public_path($menu->image_path))) {
+                unlink(public_path($menu->image_path));
+            }
+
+            $image = $request->file('image');
+            $imageName = time() . '_' . uniqid() . '.' . $image->getClientOriginalExtension();
+            $image->move(public_path('storage/menu-images'), $imageName);
+            $data['image_path'] = '/storage/menu-images/' . $imageName;
+        }
+
+        // Remove the 'image' key as we store it as 'image_path'
+        unset($data['image']);
 
         $menu->update($data);
 
