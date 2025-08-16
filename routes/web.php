@@ -4,6 +4,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\ReservationController;
+use App\Http\Controllers\Admin\RestaurantTableController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
@@ -43,9 +44,10 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-// Admin Reservations CRUD
+// Admin CRUD routes
 Route::prefix('admin')->name('admin.')->middleware(['auth','verified','admin'])->group(function () {
     Route::resource('reservations', ReservationController::class);
+    Route::resource('tables', RestaurantTableController::class);
 });
 
 // load menu routes

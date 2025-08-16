@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Reservation extends Model
 {
@@ -28,6 +29,12 @@ class Reservation extends Model
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function tables(): BelongsToMany
+    {
+        return $this->belongsToMany(RestaurantTable::class, 'reservation_table', 'reservation_id', 'table_id')
+                    ->withTimestamps();
     }
 
     public function getStatusColorAttribute(): string

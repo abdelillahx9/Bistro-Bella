@@ -42,5 +42,8 @@ class DatabaseSeeder extends Seeder
 
         // Seed reservations
         $this->call(\Database\Seeders\ReservationSeeder::class);
+
+        // Seed restaurant tables
+        $this->call(\Database\Seeders\RestaurantTableSeeder::class);
     }
 }

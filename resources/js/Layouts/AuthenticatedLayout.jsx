@@ -59,6 +59,13 @@ export default function AuthenticatedLayout({ header, children }) {
                     >
                         Reservations
                     </NavLink>
+                    <NavLink
+                        href={route('admin.tables.index')}
+                        active={route().current('admin.tables.index')}
+                        className="flex w-full items-center px-4 py-2 text-left text-sm font-medium"
+                    >
+                        Tables
+                    </NavLink>
 
                     {/* Add more NavLinks here as needed */}
                 </nav>
