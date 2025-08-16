@@ -6,6 +6,7 @@ use App\Http\Controllers\Admin\Menu\MenuCategoriesController;
 use App\Http\Controllers\Admin\Menu\MenuReviewsController;
 use App\Http\Controllers\Admin\Menu\MenuCommentsController;
 use App\Http\Controllers\Admin\Menu\MenuFavoritesController;
+use App\Http\Controllers\Admin\Menu\TagController;
 
 // Group all admin routes
 Route::prefix('admin')->name('admin.')->middleware(['auth','verified','admin'])->group(function () {
@@ -16,6 +17,14 @@ Route::prefix('admin')->name('admin.')->middleware(['auth','verified','admin'])-
     Route::get('menu/categories/{category}/edit', [MenuCategoriesController::class, 'edit'])->name('menu.categories.edit');
     Route::put('menu/categories/{category}', [MenuCategoriesController::class, 'update'])->name('menu.categories.update');
     Route::delete('menu/categories/{category}', [MenuCategoriesController::class, 'destroy'])->name('menu.categories.destroy');
+
+    // Tags CRUD
+    Route::get('menu/tags', [TagController::class, 'index'])->name('menu.tags.index');
+    Route::get('menu/tags/create', [TagController::class, 'create'])->name('menu.tags.create');
+    Route::post('menu/tags', [TagController::class, 'store'])->name('menu.tags.store');
+    Route::get('menu/tags/{tag}/edit', [TagController::class, 'edit'])->name('menu.tags.edit');
+    Route::put('menu/tags/{tag}', [TagController::class, 'update'])->name('menu.tags.update');
+    Route::delete('menu/tags/{tag}', [TagController::class, 'destroy'])->name('menu.tags.destroy');
 
     // Menus CRUD
     Route::get('menu', [MenuController::class, 'index'])->name('menu.index');

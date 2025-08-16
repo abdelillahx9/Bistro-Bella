@@ -36,5 +36,8 @@ class DatabaseSeeder extends Seeder
 
         // Seed menu categories
         $this->call(\Database\Seeders\MenuCategorySeeder::class);
+
+        // Seed tags
+        $this->call(\Database\Seeders\TagSeeder::class);
     }
 }

@@ -39,6 +39,13 @@ export default function AuthenticatedLayout({ header, children }) {
                         Categories
                     </NavLink>
                     <NavLink
+                        href={route('admin.menu.tags.index')}
+                        active={route().current('admin.menu.tags.index')}
+                        className="flex w-full items-center px-4 py-2 text-left text-sm font-medium"
+                    >
+                        Tags
+                    </NavLink>
+                    <NavLink
                         href={route('admin.menu.reviews.index')}
                         active={route().current('admin.menu.reviews.index')}
                         className="flex w-full items-center px-4 py-2 text-left text-sm font-medium"

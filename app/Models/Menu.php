@@ -25,4 +25,9 @@ class Menu extends Model
     {
         return $this->belongsTo(MenuCategory::class, 'category_id');
     }
+
+    public function tags()
+    {
+        return $this->belongsToMany(Tag::class);
+    }
 }
