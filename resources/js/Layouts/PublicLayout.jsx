@@ -2,10 +2,11 @@ import { Link, usePage } from '@inertiajs/react';
 import ApplicationLogo from '@/Components/ApplicationLogo';
 
 export default function PublicLayout({ children }) {
-    const { auth } = usePage().props;
+    const { auth, url, component } = usePage().props;
+    const isHome = (typeof window !== 'undefined' && typeof route === 'function' && route().current('public.home')) || url === '/' || component === 'Public/Home';
 
     return (
-        <div className="min-h-screen bg-white">
+        <div className=" bg-white">
             {/* Navigation */}
             <nav className="bg-white shadow-sm border-b border-gray-200">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -65,32 +66,6 @@ export default function PublicLayout({ children }) {
                                 Reserve a Table
                             </Link>
 
-                            {/* Auth Links */}
-                            {auth.user ? (
-                                <div className="flex items-center space-x-4">
-                                    <Link
-                                        href="/home"
-                                        className="text-gray-700 hover:text-gray-900 px-3 py-2 text-sm font-medium"
-                                    >
-                                        Dashboard
-                                    </Link>
-                                </div>
-                            ) : (
-                                <div className="flex items-center space-x-4">
-                                    <Link
-                                        href="/login"
-                                        className="text-gray-700 hover:text-gray-900 px-3 py-2 text-sm font-medium"
-                                    >
-                                        Login
-                                    </Link>
-                                    <Link
-                                        href="/register"
-                                        className="bg-gray-800 hover:bg-gray-900 text-white px-4 py-2 rounded-md text-sm font-medium transition-colors"
-                                    >
-                                        Register
-                                    </Link>
-                                </div>
-                            )}
                         </div>
 
                         {/* Mobile menu button */}

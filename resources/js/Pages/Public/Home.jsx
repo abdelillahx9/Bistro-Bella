@@ -1,74 +1,214 @@
 import PublicLayout from '@/Layouts/PublicLayout';
-import { Head } from '@inertiajs/react';
+import { Head, Link } from '@inertiajs/react';
 
 export default function Home() {
     return (
         <PublicLayout>
             <Head title="Home - Bistro Bella" />
-
-            {/* Hero Section */}
-            <section className="bg-gradient-to-r from-orange-50 to-orange-100 py-20">
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-                    <h1 className="text-4xl md:text-6xl font-bold text-gray-800 mb-6">
-                        Welcome to Bistro Bella
-                    </h1>
-                    <p className="text-xl text-gray-600 mb-8 max-w-3xl mx-auto">
-                        Experience the finest dining with our exquisite menu, warm atmosphere, and exceptional service.
-                    </p>
-                    <div className="space-y-4 md:space-y-0 md:space-x-4 md:flex md:justify-center">
-                        <a
-                            href="/menu"
-                            className="inline-block bg-orange-500 hover:bg-orange-600 text-white px-8 py-3 rounded-md text-lg font-medium transition-colors"
-                        >
-                            View Menu
-                        </a>
-                        <a
-                            href="/reserve"
-                            className="inline-block border-2 border-orange-500 text-orange-500 hover:bg-orange-500 hover:text-white px-8 py-3 rounded-md text-lg font-medium transition-colors"
-                        >
-                            Reserve Table
-                        </a>
+            <div>
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+                    <div className="w-full relative rounded-xl shadow-xl">
+                        <img
+                            src="/assets/home_page2.png"  // From public/
+                            alt="Hero Banner"
+                            className="w-full h-[60vh] md:h-[70vh] lg:h-[80vh] object-cover rounded-lg shadow-lg"
+                        />
+                        <div className="absolute inset-0 flex flex-col justify-end items-center text-center px-6 py-6 rounded-lg">
+                            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-4 drop-shadow-lg">
+                                Where Taste Meets Soul
+                            </h1>
+                            <h4 className="text-base sm:text-lg md:text-xl lg:text-2xl text-white mb-8 max-w-2xl leading-relaxed drop-shadow-lg">
+                                Experience the finest dining in town with our exquisite menu and impeccable service.
+                            </h4>
+                            <Link
+                                href="/reserve"
+                                className="bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded-md text-sm font-medium transition-colors"
+                            >
+                                Reserve a Table
+                            </Link>
+                        </div>
                     </div>
                 </div>
-            </section>
+            </div>
 
-            {/* Features Section */}
-            <section className="py-16">
+            {/* About Us Section */}
+            <section className="py-16 bg-gray-50">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <h2 className="text-3xl md:text-4xl font-bold text-start text-gray-800 mb-12">
+                        About Us
+                    </h2>
+                <p className="text-lg text-gray-600 leading-relaxed">
+                    Bistro Bella is a culinary haven where passion for food meets a warm, inviting atmosphere. Our chefs craft each dish with care, using fresh, locally sourced ingredients to create a symphony of flavors that will tantalize your taste buds. Whether you're celebrating a special occasion or simply seeking an unforgettable dining experience, Bistro Bella is the perfect destination.
+                </p>
+
+                </div>
+            </section>
+
+            {/* Featured Dishes Section */}
+            <section className="py-16 bg-gray-50">
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <h2 className="text-3xl md:text-4xl font-bold text-start text-gray-800 mb-12">
+                        Featured Dishes
+                    </h2>
+
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                        <div className="text-center">
-                            <div className="bg-orange-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
-                                <svg className="h-8 w-8 text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
-                                </svg>
+                        {/* Dish 1 */}
+                        <div className="bg-white rounded-lg shadow-lg overflow-hidden">
+                            <img
+                                src="/assets/dish3.png"
+                                alt="Truffle Risotto"
+                                className="w-fill h-fill object-cover"
+                            />
+                            <div className="p-6">
+                                <h3 className="text-xl font-semibold text-gray-800 mb-3">Pasta Primavera</h3>
+                                <p className="text-gray-600 leading-relaxed">
+                                    Fresh pasta with seasonal vegetables and a light cream sauce.
+                                </p>
                             </div>
-                            <h3 className="text-xl font-semibold text-gray-800 mb-2">Exquisite Menu</h3>
-                            <p className="text-gray-600">Carefully crafted dishes using the finest ingredients.</p>
                         </div>
 
-                        <div className="text-center">
-                            <div className="bg-orange-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
-                                <svg className="h-8 w-8 text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                                </svg>
+                        {/* Dish 2 */}
+                        <div className="bg-white rounded-lg shadow-lg overflow-hidden">
+                            <img
+                                src="/assets/dish2.png"
+                                alt="Beef Tenderloin"
+                                className="w-fill h-fill object-cover"
+                            />
+                            <div className="p-6">
+                                <h3 className="text-xl font-semibold text-gray-800 mb-3">Grilled Salmon</h3>
+                                <p className="text-gray-600 leading-relaxed">
+                                    Perfectly grilled salmon with a side of roasted vegetables.
+                                </p>
                             </div>
-                            <h3 className="text-xl font-semibold text-gray-800 mb-2">Perfect Location</h3>
-                            <p className="text-gray-600">Located in the heart of the city with easy access.</p>
+                        </div>
+                        {/* Dish 3 */}
+                        <div className="bg-white rounded-lg shadow-lg overflow-hidden">
+                            <img
+                                src="/assets/dish1.png"
+                                alt="Grilled Salmon"
+                                className="w-fill h-fill object-cover"
+                            />
+                            <div className="p-6">
+                                <h3 className="text-xl font-semibold text-gray-800 mb-3">Chocolate Lava Cake</h3>
+                                <p className="text-gray-600 leading-relaxed">
+                                    Warm chocolate cake with a gooey center and a tangy raspberry sauce.
+                                </p>
+                            </div>
                         </div>
 
-                        <div className="text-center">
-                            <div className="bg-orange-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
-                                <svg className="h-8 w-8 text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
-                                </svg>
+
+                    </div>
+                </div>
+            </section>
+
+            <section className="py-16 bg-gray-50">
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <h2 className="text-3xl md:text-4xl font-bold text-start text-gray-800 mb-12">
+                        Customer Reviews
+                    </h2>
+
+                    <div className="space-y-8 max-w-4xl mx-auto">
+                        {/* Review 1 */}
+                        <div className="flex items-start space-x-4">
+                            <img
+                                src="/assets/profile.png"
+                                alt="Sarah Johnson"
+                                className="w-16 h-16 rounded-full object-cover flex-shrink-0"
+                            />
+                            <div className="flex-1">
+                                <h3 className="text-lg font-semibold text-gray-800 mb-1">Sarah Johnson</h3>
+                                <p className="text-sm text-gray-500 mb-3">December 15, 2024</p>
+
+                                {/* 5 Stars */}
+                                <div className="flex mb-3">
+                                    <svg className="w-5 h-5 text-yellow-400 fill-current" viewBox="0 0 20 20">
+                                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                                    </svg>
+                                    <svg className="w-5 h-5 text-yellow-400 fill-current" viewBox="0 0 20 20">
+                                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                                    </svg>
+                                    <svg className="w-5 h-5 text-yellow-400 fill-current" viewBox="0 0 20 20">
+                                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                                    </svg>
+                                    <svg className="w-5 h-5 text-yellow-400 fill-current" viewBox="0 0 20 20">
+                                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                                    </svg>
+                                </div>
+
+                                <p className="text-gray-600 leading-relaxed">
+                                    "Bistro Bella exceeded all my expectations! The food was exquisite, the service impeccable, and the ambiance was perfect for a romantic evening. I highly recommend the Pasta Primavera!"                                </p>
                             </div>
-                            <h3 className="text-xl font-semibold text-gray-800 mb-2">Exceptional Service</h3>
-                            <p className="text-gray-600">Our team is dedicated to making your experience memorable.</p>
+                        </div>
+
+                        {/* Review 2 */}
+                        <div className="flex items-start space-x-4">
+                            <img
+                                src="/assets/profile.png"
+                                alt="Michael Chen"
+                                className="w-16 h-16 rounded-full object-cover flex-shrink-0"
+                            />
+                            <div className="flex-1">
+                                <h3 className="text-lg font-semibold text-gray-800 mb-1">Michael Chen</h3>
+                                <p className="text-sm text-gray-500 mb-3">November 28, 2024</p>
+
+                                {/* 5 Stars */}
+                                <div className="flex mb-3">
+                                    <svg className="w-5 h-5 text-yellow-400 fill-current" viewBox="0 0 20 20">
+                                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                                    </svg>
+                                    <svg className="w-5 h-5 text-yellow-400 fill-current" viewBox="0 0 20 20">
+                                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                                    </svg>
+                                    <svg className="w-5 h-5 text-yellow-400 fill-current" viewBox="0 0 20 20">
+                                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                                    </svg>
+                                    <svg className="w-5 h-5 text-yellow-400 fill-current" viewBox="0 0 20 20">
+                                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                                    </svg>
+                                </div>
+
+                                <p className="text-gray-600 leading-relaxed">
+                                    "The ambiance is perfect for special occasions. I had a wonderful experience at Bistro Bella. The Grilled Salmon was cooked to perfection, and the staff was very attentive. The only reason I didn't give it 5 stars is because the dessert menu could use a bit more variety."
+                                </p>
+                            </div>
+                        </div>
+
+                        {/* Review 3 */}
+                        <div className="flex items-start space-x-4">
+                            <img
+                                src="/assets/profile.png"
+                                alt="Emma Rodriguez"
+                                className="w-16 h-16 rounded-full object-cover flex-shrink-0"
+                            />
+                            <div className="flex-1">
+                                <h3 className="text-lg font-semibold text-gray-800 mb-1">Emma Rodriguez</h3>
+                                <p className="text-sm text-gray-500 mb-3">October 10, 2024</p>
+
+                                {/* 5 Stars */}
+                                <div className="flex mb-3">
+                                    <svg className="w-5 h-5 text-yellow-400 fill-current" viewBox="0 0 20 20">
+                                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                                    </svg>
+                                    <svg className="w-5 h-5 text-yellow-400 fill-current" viewBox="0 0 20 20">
+                                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                                    </svg>
+                                    <svg className="w-5 h-5 text-yellow-400 fill-current" viewBox="0 0 20 20">
+                                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                                    </svg>
+                                    <svg className="w-5 h-5 text-yellow-400 fill-current" viewBox="0 0 20 20">
+                                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                                    </svg>
+                                </div>
+
+                                <p className="text-gray-600 leading-relaxed">
+                                    "From the moment we walked in, we felt welcomed and pampered. The Chocolate Lava Cake was the perfect ending to a delicious meal. Bistro Bella is a true gem!"                                </p>
+                            </div>
                         </div>
                     </div>
                 </div>
             </section>
+
+
         </PublicLayout>
     );
 }
