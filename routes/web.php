@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\PublicController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\ReservationController;
 use App\Http\Controllers\Admin\RestaurantTableController;
@@ -10,14 +11,15 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 
-Route::get('/', function () {
-    return Inertia::render('Welcome', [
-        'canLogin' => Route::has('login'),
-        'canRegister' => Route::has('register'),
-        'laravelVersion' => Application::VERSION,
-        'phpVersion' => PHP_VERSION,
-    ]);
-});
+Route::get('/', [PublicController::class, 'home'])->name('public.home');
+
+// Public pages
+Route::get('/menu', [PublicController::class, 'menu'])->name('public.menu');
+Route::get('/blog', [PublicController::class, 'blog'])->name('public.blog');
+Route::get('/reservations', [PublicController::class, 'reservations'])->name('public.reservations');
+Route::get('/about', [PublicController::class, 'about'])->name('public.about');
+Route::get('/contact', [PublicController::class, 'contact'])->name('public.contact');
+Route::get('/reserve', [PublicController::class, 'reserve'])->name('public.reserve');
 
 // User home page (protected route for authenticated users)
 Route::get('/home', [HomeController::class, 'index'])
