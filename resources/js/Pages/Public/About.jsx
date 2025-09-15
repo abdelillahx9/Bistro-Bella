@@ -8,10 +8,10 @@ export default function About() {
 
             <section className="pt-16 bg-gray-50">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                    <h2 className="text-3xl md:text-4xl font-bold text-start text-gray-800 mb-6">
+                    <h2 className="text-3xl md:text-4xl font-bold text-center text-gray-800 mb-6">
                         About us
                     </h2>
-                    <p className="text-gray-600 leading-relaxed">
+                    <p className="text-gray-600 leading-relaxed text-center">
                         Our story, our passion.
                     </p>
                 </div>
@@ -111,8 +111,8 @@ export default function About() {
                         Experience the warmth of our restaurant and create unforgettable memories with your loved ones.
                     </p>
                     <Link
-                        href="/reserve"
-                        className="bg-orange-500 hover:bg-orange-600 text-white px-8 py-4 rounded-lg text-lg font-semibold transition-all duration-200 shadow-lg hover:shadow-xl transform hover:scale-105"
+                        href="/reservations"
+                        className="bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 shadow-md hover:shadow-lg transform hover:scale-105"
                     >
                         Reserve a Table
                     </Link>

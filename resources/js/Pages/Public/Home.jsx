@@ -21,8 +21,8 @@ export default function Home() {
                                 Experience the finest dining in town with our exquisite menu and impeccable service.
                             </h4>
                             <Link
-                                href="/reserve"
-                                className="bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded-md text-sm font-medium transition-colors"
+                                href="/reservations"
+                                className="bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 shadow-md hover:shadow-lg transform hover:scale-105"
                             >
                                 Reserve a Table
                             </Link>

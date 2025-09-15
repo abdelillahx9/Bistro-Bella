@@ -7,10 +7,10 @@ export default function Menu() {
             <Head title="Menu - Bistro Bella" />
             <section className="py-16 bg-gray-50">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                    <h2 className="text-3xl md:text-4xl font-bold text-start text-gray-800 mb-12">
+                    <h2 className="text-3xl md:text-4xl font-bold text-center text-gray-800 mb-12">
                         Our Menu
                     </h2>
-                    <p className="text-gray-600 leading-relaxed">
+                    <p className="text-gray-600 leading-relaxed text-center">
                         Fresh pasta with seasonal vegetables and a light cream sauce.
                     </p>
                 </div>

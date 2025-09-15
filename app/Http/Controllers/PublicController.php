@@ -39,6 +39,6 @@ class PublicController extends Controller
 
     public function reserve()
     {
-        return Inertia::render('Public/Reserve');
+        return redirect()->route('public.reservations');
     }
 }
