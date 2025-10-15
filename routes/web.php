@@ -49,7 +49,11 @@ Route::middleware('auth')->group(function () {
 
 // User routes (protected route for authenticated users only)
 Route::prefix('user')->name('user.')->middleware(['auth', 'verified'])->group(function () {
+    Route::get('/menu', [UserController::class, 'menu'])->name('menu');
     Route::get('/reservations', [UserController::class, 'reservations'])->name('reservations');
+    Route::get('/contact', [UserController::class, 'contact'])->name('contact');
+    Route::get('/events', [UserController::class, 'events'])->name('events');
+    Route::get('/reviews', [UserController::class, 'reviews'])->name('reviews');
     Route::get('/profile', [UserController::class, 'profile'])->name('profile');
     Route::get('/activity', [UserController::class, 'activity'])->name('activity');
 });

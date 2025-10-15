@@ -36,6 +36,19 @@ export default function UserLayout({ children }) {
                                 )}
                             </Link>
                             <Link
+                                href="/user/menu"
+                                className={`relative px-3 py-2 text-sm font-medium transition-all duration-300 ${
+                                    url === '/user/menu' || component === 'User/Menu'
+                                        ? 'text-orange-600 bg-orange-50 rounded-lg'
+                                        : 'text-gray-700 hover:text-orange-600 hover:bg-orange-50 rounded-lg'
+                                }`}
+                            >
+                                Menu
+                                {(url === '/user/menu' || component === 'User/Menu') && (
+                                    <span className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-1 h-1 bg-orange-600 rounded-full"></span>
+                                )}
+                            </Link>
+                            <Link
                                 href="/user/reservations"
                                 className={`relative px-3 py-2 text-sm font-medium transition-all duration-300 ${
                                     url === '/user/reservations' || component === 'User/Reservations'
@@ -43,34 +56,47 @@ export default function UserLayout({ children }) {
                                         : 'text-gray-700 hover:text-orange-600 hover:bg-orange-50 rounded-lg'
                                 }`}
                             >
-                                My Reservations
+                                Reservations
                                 {(url === '/user/reservations' || component === 'User/Reservations') && (
                                     <span className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-1 h-1 bg-orange-600 rounded-full"></span>
                                 )}
                             </Link>
                             <Link
-                                href="/user/profile"
+                                href="/user/events"
                                 className={`relative px-3 py-2 text-sm font-medium transition-all duration-300 ${
-                                    url === '/user/profile' || component === 'User/Profile'
+                                    url === '/user/events' || component === 'User/Events'
                                         ? 'text-orange-600 bg-orange-50 rounded-lg'
                                         : 'text-gray-700 hover:text-orange-600 hover:bg-orange-50 rounded-lg'
                                 }`}
                             >
-                                Profile
-                                {(url === '/user/profile' || component === 'User/Profile') && (
+                                Events
+                                {(url === '/user/events' || component === 'User/Events') && (
                                     <span className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-1 h-1 bg-orange-600 rounded-full"></span>
                                 )}
                             </Link>
                             <Link
-                                href="/user/activity"
+                                href="/user/reviews"
                                 className={`relative px-3 py-2 text-sm font-medium transition-all duration-300 ${
-                                    url === '/user/activity' || component === 'User/Activity'
+                                    url === '/user/reviews' || component === 'User/Reviews'
                                         ? 'text-orange-600 bg-orange-50 rounded-lg'
                                         : 'text-gray-700 hover:text-orange-600 hover:bg-orange-50 rounded-lg'
                                 }`}
                             >
-                                My Activity
-                                {(url === '/user/activity' || component === 'User/Activity') && (
+                                Reviews
+                                {(url === '/user/reviews' || component === 'User/Reviews') && (
+                                    <span className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-1 h-1 bg-orange-600 rounded-full"></span>
+                                )}
+                            </Link>
+                            <Link
+                                href="/user/contact"
+                                className={`relative px-3 py-2 text-sm font-medium transition-all duration-300 ${
+                                    url === '/user/contact' || component === 'User/Contact'
+                                        ? 'text-orange-600 bg-orange-50 rounded-lg'
+                                        : 'text-gray-700 hover:text-orange-600 hover:bg-orange-50 rounded-lg'
+                                }`}
+                            >
+                                Contact
+                                {(url === '/user/contact' || component === 'User/Contact') && (
                                     <span className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-1 h-1 bg-orange-600 rounded-full"></span>
                                 )}
                             </Link>
