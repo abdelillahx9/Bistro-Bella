@@ -3,6 +3,7 @@
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\PublicController;
+use App\Http\Controllers\UserController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\ReservationController;
 use App\Http\Controllers\Admin\RestaurantTableController;
@@ -22,7 +23,7 @@ Route::get('/contact', [PublicController::class, 'contact'])->name('public.conta
 Route::get('/reserve', [PublicController::class, 'reserve'])->name('public.reserve');
 
 // User home page (protected route for authenticated users)
-Route::get('/home', [HomeController::class, 'index'])
+Route::get('/home', [UserController::class, 'dashboard'])
     ->middleware(['auth', 'verified'])
     ->name('home');
 
@@ -44,6 +45,13 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+});
+
+// User routes (protected route for authenticated users only)
+Route::prefix('user')->name('user.')->middleware(['auth', 'verified'])->group(function () {
+    Route::get('/reservations', [UserController::class, 'reservations'])->name('reservations');
+    Route::get('/profile', [UserController::class, 'profile'])->name('profile');
+    Route::get('/activity', [UserController::class, 'activity'])->name('activity');
 });
 
 // Admin CRUD routes
