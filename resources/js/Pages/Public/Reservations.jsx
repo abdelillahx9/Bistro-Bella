@@ -1,10 +1,92 @@
 import PublicLayout from '@/Layouts/PublicLayout';
-import { Head } from '@inertiajs/react';
+import { Head, useForm } from '@inertiajs/react';
+import { useState } from 'react';
 
-export default function Reservations() {
+export default function Reservations({ userData }) {
+    const [showNotification, setShowNotification] = useState(false);
+    const [notificationMessage, setNotificationMessage] = useState('');
+    const [notificationType, setNotificationType] = useState('success');
+
+    const { data, setData, post, processing, errors, reset } = useForm({
+        name: userData?.name || '',
+        email: userData?.email || '',
+        phone: '',
+        reservation_date: '',
+        reservation_time: '',
+        guest_count: '',
+        special_requests: '',
+    });
+
+    const submit = (e) => {
+        e.preventDefault();
+
+        post(route('public.reservations.store'), {
+            onSuccess: () => {
+                setNotificationMessage('Your reservation has been submitted successfully! We will contact you shortly to confirm.');
+                setNotificationType('success');
+                setShowNotification(true);
+                reset();
+
+                // Hide notification after 5 seconds
+                setTimeout(() => {
+                    setShowNotification(false);
+                }, 5000);
+            },
+            onError: () => {
+                setNotificationMessage('There was an error submitting your reservation. Please try again.');
+                setNotificationType('error');
+                setShowNotification(true);
+
+                setTimeout(() => {
+                    setShowNotification(false);
+                }, 5000);
+            }
+        });
+    };
+
     return (
         <PublicLayout>
-            <Head title="Contact - Bistro Bella" />
+            <Head title="Reservations - Bistro Bella" />
+
+            {/* Notification */}
+            {showNotification && (
+                <div className={`fixed top-4 right-4 z-50 max-w-sm w-full bg-white shadow-lg rounded-lg pointer-events-auto ring-1 ring-black ring-opacity-5 ${notificationType === 'success' ? 'border-l-4 border-green-500' : 'border-l-4 border-red-500'}`}>
+                    <div className="p-4">
+                        <div className="flex items-start">
+                            <div className="flex-shrink-0">
+                                {notificationType === 'success' ? (
+                                    <svg className="h-6 w-6 text-green-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                    </svg>
+                                ) : (
+                                    <svg className="h-6 w-6 text-red-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z" />
+                                    </svg>
+                                )}
+                            </div>
+                            <div className="ml-3 w-0 flex-1 pt-0.5">
+                                <p className="text-sm font-medium text-gray-900">
+                                    {notificationType === 'success' ? 'Reservation Submitted!' : 'Error'}
+                                </p>
+                                <p className="mt-1 text-sm text-gray-500">
+                                    {notificationMessage}
+                                </p>
+                            </div>
+                            <div className="ml-4 flex-shrink-0 flex">
+                                <button
+                                    className="bg-white rounded-md inline-flex text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                                    onClick={() => setShowNotification(false)}
+                                >
+                                    <span className="sr-only">Close</span>
+                                    <svg className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                                        <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            )}
 
             <section className="pt-16 bg-gray-50">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -17,13 +99,12 @@ export default function Reservations() {
                 </div>
             </section>
 
-
-            {/* Contact Form Section */}
+            {/* Reservation Form Section */}
             <section className="py-16 bg-white">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="flex flex-col lg:flex-row justify-around gap-12">
-                        {/* Contact Form */}
-                        <div className="flex-1  p-8 md:p-12 h-fit">
+                        {/* Reservation Form */}
+                        <div className="flex-1 p-8 md:p-12 h-fit">
                             <div className="mb-8">
                                 <h3 className="text-2xl md:text-3xl font-bold text-gray-800 mb-4">
                                     Reservation Form
@@ -33,22 +114,25 @@ export default function Reservations() {
                                 </p>
                             </div>
 
-                            <form className="space-y-6">
+                            <form onSubmit={submit} className="space-y-6">
                                 {/* Name Field */}
                                 <div>
                                     <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-2">
-                                        Full Name
+                                        Full Name *
                                     </label>
                                     <input
                                         type="text"
                                         id="name"
-                                        name="name"
+                                        value={data.name}
+                                        onChange={e => setData('name', e.target.value)}
                                         className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-colors duration-200 bg-white"
                                         placeholder="Enter your full name"
+                                        required
                                     />
+                                    {errors.name && <p className="mt-1 text-sm text-red-600">{errors.name}</p>}
                                 </div>
 
-                                {/* Email Field */}
+                                {/* Phone Field */}
                                 <div>
                                     <label htmlFor="phone" className="block text-sm font-medium text-gray-700 mb-2">
                                         Phone Number
@@ -56,12 +140,13 @@ export default function Reservations() {
                                     <input
                                         type="tel"
                                         id="phone"
-                                        name="phone"
+                                        value={data.phone}
+                                        onChange={e => setData('phone', e.target.value)}
                                         className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-colors duration-200 bg-white"
-                                        placeholder="Enter your email address"
+                                        placeholder="Enter your phone number"
                                     />
+                                    {errors.phone && <p className="mt-1 text-sm text-red-600">{errors.phone}</p>}
                                 </div>
-
 
                                 {/* Email Field */}
                                 <div>
@@ -71,62 +156,97 @@ export default function Reservations() {
                                     <input
                                         type="email"
                                         id="email"
-                                        name="email"
+                                        value={data.email}
+                                        onChange={e => setData('email', e.target.value)}
                                         className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-colors duration-200 bg-white"
                                         placeholder="Enter your email address"
                                     />
+                                    {errors.email && <p className="mt-1 text-sm text-red-600">{errors.email}</p>}
+                                    {(!data.email && !data.phone) && <p className="mt-1 text-sm text-gray-500">Either email or phone number is required</p>}
                                 </div>
 
-                                {/* number of guests Field */}
+                                {/* Date Field */}
                                 <div>
-                                    <label htmlFor="guests" className="block text-sm font-medium text-gray-700 mb-2">
-                                        Number of Guests
+                                    <label htmlFor="reservation_date" className="block text-sm font-medium text-gray-700 mb-2">
+                                        Reservation Date *
                                     </label>
                                     <input
-                                        type="number"
-                                        id="guests"
-                                        name="guests"
+                                        type="date"
+                                        id="reservation_date"
+                                        value={data.reservation_date}
+                                        onChange={e => setData('reservation_date', e.target.value)}
+                                        min={new Date().toISOString().split('T')[0]}
                                         className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-colors duration-200 bg-white"
-                                        placeholder="Enter number of guests"
+                                        required
                                     />
+                                    {errors.reservation_date && <p className="mt-1 text-sm text-red-600">{errors.reservation_date}</p>}
                                 </div>
 
-
-                                {/* time field */}
-                                                                <div>
-                                    <label htmlFor="time" className="block text-sm font-medium text-gray-700 mb-2">
-                                        Time
-                                    </label>
-                                        <input
-                                            type="time"
-                                            id="time"
-                                            name="time"
-                                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-colors duration-200 bg-white"
-                                            placeholder="Enter number of guests"
-                                        />
-                                    </div>
-
-                                {/* Note Field */}
+                                {/* Time Field */}
                                 <div>
-                                    <label htmlFor="note" className="block text-sm font-medium text-gray-700 mb-2">
-                                        Note
+                                    <label htmlFor="reservation_time" className="block text-sm font-medium text-gray-700 mb-2">
+                                        Reservation Time *
+                                    </label>
+                                    <input
+                                        type="time"
+                                        id="reservation_time"
+                                        value={data.reservation_time}
+                                        onChange={e => setData('reservation_time', e.target.value)}
+                                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-colors duration-200 bg-white"
+                                        required
+                                    />
+                                    {errors.reservation_time && <p className="mt-1 text-sm text-red-600">{errors.reservation_time}</p>}
+                                </div>
+
+                                {/* Number of Guests Field */}
+                                <div>
+                                    <label htmlFor="guest_count" className="block text-sm font-medium text-gray-700 mb-2">
+                                        Number of Guests *
+                                    </label>
+                                    <select
+                                        id="guest_count"
+                                        value={data.guest_count}
+                                        onChange={e => setData('guest_count', e.target.value)}
+                                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-colors duration-200 bg-white"
+                                        required
+                                    >
+                                        <option value="">Select number of guests</option>
+                                        <option value="1">1 Guest</option>
+                                        <option value="2">2 Guests</option>
+                                        <option value="3">3 Guests</option>
+                                        <option value="4">4 Guests</option>
+                                        <option value="5">5 Guests</option>
+                                        <option value="6">6 Guests</option>
+                                        <option value="7">7 Guests</option>
+                                        <option value="8">8+ Guests</option>
+                                    </select>
+                                    {errors.guest_count && <p className="mt-1 text-sm text-red-600">{errors.guest_count}</p>}
+                                </div>
+
+                                {/* Special Requests Field */}
+                                <div>
+                                    <label htmlFor="special_requests" className="block text-sm font-medium text-gray-700 mb-2">
+                                        Special Requests
                                     </label>
                                     <textarea
-                                        id="note"
-                                        name="note"
+                                        id="special_requests"
+                                        value={data.special_requests}
+                                        onChange={e => setData('special_requests', e.target.value)}
                                         rows="4"
                                         className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-colors duration-200 bg-white"
-                                        placeholder="Enter any special requests or notes"
+                                        placeholder="Enter any special requests or notes (optional)"
                                     ></textarea>
+                                    {errors.special_requests && <p className="mt-1 text-sm text-red-600">{errors.special_requests}</p>}
                                 </div>
 
                                 {/* Submit Button */}
                                 <div>
                                     <button
                                         type="submit"
-                                        className="bg-orange-500 hover:bg-orange-600 text-white px-8 py-3 rounded-lg text-lg font-semibold transition-all duration-200 shadow-lg hover:shadow-xl transform hover:scale-105"
+                                        disabled={processing}
+                                        className="bg-orange-500 hover:bg-orange-600 disabled:bg-orange-300 text-white px-8 py-3 rounded-lg text-lg font-semibold transition-all duration-200 shadow-lg hover:shadow-xl transform hover:scale-105 disabled:transform-none disabled:cursor-not-allowed"
                                     >
-                                        Reserve Now
+                                        {processing ? 'Submitting...' : 'Reserve Now'}
                                     </button>
                                 </div>
                             </form>

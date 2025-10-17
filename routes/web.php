@@ -19,6 +19,7 @@ Route::get('/menu', [PublicController::class, 'menu'])->name('public.menu');
 Route::get('/menu/category/{category}', [PublicController::class, 'getCategoryMenu'])->name('public.menu.category');
 Route::get('/blog', [PublicController::class, 'blog'])->name('public.blog');
 Route::get('/reservations', [PublicController::class, 'reservations'])->name('public.reservations');
+Route::post('/reservations', [PublicController::class, 'storeReservation'])->name('public.reservations.store');
 Route::get('/about', [PublicController::class, 'about'])->name('public.about');
 Route::get('/contact', [PublicController::class, 'contact'])->name('public.contact');
 Route::get('/reserve', [PublicController::class, 'reserve'])->name('public.reserve');
