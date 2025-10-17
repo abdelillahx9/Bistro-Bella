@@ -19,6 +19,7 @@ class Reservation extends Model
         'special_requests',
         'status',
         'source',
+        'reminder_sent',
     ];
 
     protected $casts = [
