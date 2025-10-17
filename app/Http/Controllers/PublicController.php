@@ -14,7 +14,34 @@ class PublicController extends Controller
 
     public function menu()
     {
-        return Inertia::render('Public/Menu');
+        $categories = \App\Models\MenuCategory::with(['menus' => function ($query) {
+            $query->where('is_available', true)
+                  ->with('tags')
+                  ->limit(3);
+        }])
+        ->withCount(['menus' => function ($query) {
+            $query->where('is_available', true);
+        }])
+        ->get();
+
+        return Inertia::render('Public/Menu', [
+            'categories' => $categories
+        ]);
+    }
+
+    public function getCategoryMenu($categorySlug)
+    {
+        $category = \App\Models\MenuCategory::where('slug', $categorySlug)
+            ->with(['menus' => function ($query) {
+                $query->where('is_available', true)
+                      ->with('tags');
+            }])
+            ->firstOrFail();
+
+        return response()->json([
+            'category' => $category,
+            'menus' => $category->menus
+        ]);
     }
 
     public function blog()

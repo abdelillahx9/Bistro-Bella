@@ -14,4 +14,9 @@ class MenuCategory extends Model
         'slug',
         'description',
     ];
+
+    public function menus()
+    {
+        return $this->hasMany(Menu::class, 'category_id');
+    }
 }

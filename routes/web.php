@@ -16,6 +16,7 @@ Route::get('/', [PublicController::class, 'home'])->name('public.home');
 
 // Public pages
 Route::get('/menu', [PublicController::class, 'menu'])->name('public.menu');
+Route::get('/menu/category/{category}', [PublicController::class, 'getCategoryMenu'])->name('public.menu.category');
 Route::get('/blog', [PublicController::class, 'blog'])->name('public.blog');
 Route::get('/reservations', [PublicController::class, 'reservations'])->name('public.reservations');
 Route::get('/about', [PublicController::class, 'about'])->name('public.about');
