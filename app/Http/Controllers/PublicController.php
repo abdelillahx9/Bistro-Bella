@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\ReservationConfirmed;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 use Inertia\Inertia;
 
 class PublicController extends Controller
@@ -89,6 +91,11 @@ class PublicController extends Controller
             'source' => 'website',
             'user_id' => auth()->id(), // Will be null for guests
         ]);
+
+        // Send confirmation email if email address is provided
+        if ($validated['email']) {
+            Mail::to($validated['email'])->send(new ReservationConfirmed($reservation));
+        }
 
         return redirect()->back()->with('success', 'Your reservation has been submitted successfully! We will contact you shortly to confirm.');
     }
