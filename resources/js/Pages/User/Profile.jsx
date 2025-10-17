@@ -1,9 +1,9 @@
-import UserLayout from '@/Layouts/UserLayout';
+import PublicLayout from '@/Layouts/PublicLayout';
 import { Head } from '@inertiajs/react';
 
 export default function Profile() {
     return (
-        <UserLayout>
+        <PublicLayout>
             <Head title="Profile" />
 
             <div className="py-12">
@@ -18,6 +18,6 @@ export default function Profile() {
                     </div>
                 </div>
             </div>
-        </UserLayout>
+        </PublicLayout>
     );
 }

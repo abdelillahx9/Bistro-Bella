@@ -9,32 +9,12 @@ class UserController extends Controller
 {
     public function dashboard()
     {
-        return Inertia::render('User/Dashboard');
-    }
-
-    public function reservations()
-    {
-        return Inertia::render('User/Reservations');
+        return Inertia::render('Home');
     }
 
     public function profile()
     {
         return Inertia::render('User/Profile');
-    }
-
-    public function menu()
-    {
-        return Inertia::render('User/Menu');
-    }
-
-    public function contact()
-    {
-        return Inertia::render('User/Contact');
-    }
-
-    public function events()
-    {
-        return Inertia::render('User/Events');
     }
 
     public function reviews()

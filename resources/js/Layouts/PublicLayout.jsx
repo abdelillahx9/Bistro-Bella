@@ -1,8 +1,11 @@
 import { Link, usePage } from '@inertiajs/react';
 import ApplicationLogo from '@/Components/ApplicationLogo';
+import Dropdown from '@/Components/Dropdown';
 
 export default function PublicLayout({ children }) {
     const { auth, url, component } = usePage().props;
+    const user = auth?.user;
+    const isAuthenticated = !!user;
     const isHome = (typeof window !== 'undefined' && typeof route === 'function' && route().current('public.home')) || url === '/' || component === 'Public/Home';
 
     return (
@@ -13,7 +16,7 @@ export default function PublicLayout({ children }) {
                     <div className="flex justify-between items-center h-16 relative">
                         {/* Logo */}
                         <div className="flex items-center z-10">
-                            <Link href="/" className="flex items-center">
+                            <Link href={isAuthenticated ? "/home" : "/"} className="flex items-center">
                                 <ApplicationLogo className="block h-8 w-auto fill-current text-gray-800" />
                                 <span className="ml-2 text-xl font-bold text-gray-800">Bistro Bella</span>
                             </Link>
@@ -21,102 +24,224 @@ export default function PublicLayout({ children }) {
 
                         {/* Navigation Links - Centered */}
                         <div className="hidden md:flex items-center absolute left-1/2 transform -translate-x-1/2 space-x-8">
-                            <Link
-                                href="/"
-                                className={`relative px-3 py-2 text-sm font-medium transition-all duration-300 ${
-                                    url === '/' || component === 'Public/Home'
-                                        ? 'text-orange-600 bg-orange-50 rounded-lg'
-                                        : 'text-gray-700 hover:text-orange-600 hover:bg-orange-50 rounded-lg'
-                                }`}
-                            >
-                                Home
-                                {(url === '/' || component === 'Public/Home') && (
-                                    <span className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-1 h-1 bg-orange-600 rounded-full"></span>
-                                )}
-                            </Link>
-                            <Link
-                                href="/menu"
-                                className={`relative px-3 py-2 text-sm font-medium transition-all duration-300 ${
-                                    url === '/menu' || component === 'Public/Menu'
-                                        ? 'text-orange-600 bg-orange-50 rounded-lg'
-                                        : 'text-gray-700 hover:text-orange-600 hover:bg-orange-50 rounded-lg'
-                                }`}
-                            >
-                                Menu
-                                {(url === '/menu' || component === 'Public/Menu') && (
-                                    <span className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-1 h-1 bg-orange-600 rounded-full"></span>
-                                )}
-                            </Link>
-                            <Link
-                                href="/blog"
-                                className={`relative px-3 py-2 text-sm font-medium transition-all duration-300 ${
-                                    url === '/blog' || component === 'Public/Blog'
-                                        ? 'text-orange-600 bg-orange-50 rounded-lg'
-                                        : 'text-gray-700 hover:text-orange-600 hover:bg-orange-50 rounded-lg'
-                                }`}
-                            >
-                                Blog
-                                {(url === '/blog' || component === 'Public/Blog') && (
-                                    <span className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-1 h-1 bg-orange-600 rounded-full"></span>
-                                )}
-                            </Link>
-                            <Link
-                                href="/reservations"
-                                className={`relative px-3 py-2 text-sm font-medium transition-all duration-300 ${
-                                    url === '/reservations' || component === 'Public/Reservations'
-                                        ? 'text-orange-600 bg-orange-50 rounded-lg'
-                                        : 'text-gray-700 hover:text-orange-600 hover:bg-orange-50 rounded-lg'
-                                }`}
-                            >
-                                Reservations
-                                {(url === '/reservations' || component === 'Public/Reservations') && (
-                                    <span className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-1 h-1 bg-orange-600 rounded-full"></span>
-                                )}
-                            </Link>
-                            <Link
-                                href="/about"
-                                className={`relative px-3 py-2 text-sm font-medium transition-all duration-300 ${
-                                    url === '/about' || component === 'Public/About'
-                                        ? 'text-orange-600 bg-orange-50 rounded-lg'
-                                        : 'text-gray-700 hover:text-orange-600 hover:bg-orange-50 rounded-lg'
-                                }`}
-                            >
-                                About
-                                {(url === '/about' || component === 'Public/About') && (
-                                    <span className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-1 h-1 bg-orange-600 rounded-full"></span>
-                                )}
-                            </Link>
-                            <Link
-                                href="/contact"
-                                className={`relative px-3 py-2 text-sm font-medium transition-all duration-300 ${
-                                    url === '/contact' || component === 'Public/Contact'
-                                        ? 'text-orange-600 bg-orange-50 rounded-lg'
-                                        : 'text-gray-700 hover:text-orange-600 hover:bg-orange-50 rounded-lg'
-                                }`}
-                            >
-                                Contact
-                                {(url === '/contact' || component === 'Public/Contact') && (
-                                    <span className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-1 h-1 bg-orange-600 rounded-full"></span>
-                                )}
-                            </Link>
+                            {isAuthenticated ? (
+                                // Authenticated user navigation
+                                <>
+                                    <Link
+                                        href="/home"
+                                        className={`relative px-3 py-2 text-sm font-medium transition-all duration-300 ${
+                                            url === '/home' || component === 'Home'
+                                                ? 'text-orange-600 bg-orange-50 rounded-lg'
+                                                : 'text-gray-700 hover:text-orange-600 hover:bg-orange-50 rounded-lg'
+                                        }`}
+                                    >
+                                        Dashboard
+                                        {(url === '/home' || component === 'Home') && (
+                                            <span className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-1 h-1 bg-orange-600 rounded-full"></span>
+                                        )}
+                                    </Link>
+                                    <Link
+                                        href="/menu"
+                                        className={`relative px-3 py-2 text-sm font-medium transition-all duration-300 ${
+                                            url === '/menu' || component === 'Public/Menu'
+                                                ? 'text-orange-600 bg-orange-50 rounded-lg'
+                                                : 'text-gray-700 hover:text-orange-600 hover:bg-orange-50 rounded-lg'
+                                        }`}
+                                    >
+                                        Menu
+                                        {(url === '/menu' || component === 'Public/Menu') && (
+                                            <span className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-1 h-1 bg-orange-600 rounded-full"></span>
+                                        )}
+                                    </Link>
+                                    <Link
+                                        href="/blog"
+                                        className={`relative px-3 py-2 text-sm font-medium transition-all duration-300 ${
+                                            url === '/blog' || component === 'Public/Blog'
+                                                ? 'text-orange-600 bg-orange-50 rounded-lg'
+                                                : 'text-gray-700 hover:text-orange-600 hover:bg-orange-50 rounded-lg'
+                                        }`}
+                                    >
+                                        Blog
+                                        {(url === '/blog' || component === 'Public/Blog') && (
+                                            <span className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-1 h-1 bg-orange-600 rounded-full"></span>
+                                        )}
+                                    </Link>
+                                    <Link
+                                        href="/reservations"
+                                        className={`relative px-3 py-2 text-sm font-medium transition-all duration-300 ${
+                                            url === '/reservations' || component === 'Public/Reservations'
+                                                ? 'text-orange-600 bg-orange-50 rounded-lg'
+                                                : 'text-gray-700 hover:text-orange-600 hover:bg-orange-50 rounded-lg'
+                                        }`}
+                                    >
+                                        Reservations
+                                        {(url === '/reservations' || component === 'Public/Reservations') && (
+                                            <span className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-1 h-1 bg-orange-600 rounded-full"></span>
+                                        )}
+                                    </Link>
+                                    <Link
+                                        href="/contact"
+                                        className={`relative px-3 py-2 text-sm font-medium transition-all duration-300 ${
+                                            url === '/contact' || component === 'Public/Contact'
+                                                ? 'text-orange-600 bg-orange-50 rounded-lg'
+                                                : 'text-gray-700 hover:text-orange-600 hover:bg-orange-50 rounded-lg'
+                                        }`}
+                                    >
+                                        Contact
+                                        {(url === '/contact' || component === 'Public/Contact') && (
+                                            <span className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-1 h-1 bg-orange-600 rounded-full"></span>
+                                        )}
+                                    </Link>
+                                    <Link
+                                        href="/user/reviews"
+                                        className={`relative px-3 py-2 text-sm font-medium transition-all duration-300 ${
+                                            url === '/user/reviews' || component === 'User/Reviews'
+                                                ? 'text-orange-600 bg-orange-50 rounded-lg'
+                                                : 'text-gray-700 hover:text-orange-600 hover:bg-orange-50 rounded-lg'
+                                        }`}
+                                    >
+                                        Reviews
+                                        {(url === '/user/reviews' || component === 'User/Reviews') && (
+                                            <span className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-1 h-1 bg-orange-600 rounded-full"></span>
+                                        )}
+                                    </Link>
+                                </>
+                            ) : (
+                                // Guest navigation
+                                <>
+                                    <Link
+                                        href="/"
+                                        className={`relative px-3 py-2 text-sm font-medium transition-all duration-300 ${
+                                            url === '/' || component === 'Public/Home'
+                                                ? 'text-orange-600 bg-orange-50 rounded-lg'
+                                                : 'text-gray-700 hover:text-orange-600 hover:bg-orange-50 rounded-lg'
+                                        }`}
+                                    >
+                                        Home
+                                        {(url === '/' || component === 'Public/Home') && (
+                                            <span className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-1 h-1 bg-orange-600 rounded-full"></span>
+                                        )}
+                                    </Link>
+                                    <Link
+                                        href="/menu"
+                                        className={`relative px-3 py-2 text-sm font-medium transition-all duration-300 ${
+                                            url === '/menu' || component === 'Public/Menu'
+                                                ? 'text-orange-600 bg-orange-50 rounded-lg'
+                                                : 'text-gray-700 hover:text-orange-600 hover:bg-orange-50 rounded-lg'
+                                        }`}
+                                    >
+                                        Menu
+                                        {(url === '/menu' || component === 'Public/Menu') && (
+                                            <span className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-1 h-1 bg-orange-600 rounded-full"></span>
+                                        )}
+                                    </Link>
+                                    <Link
+                                        href="/blog"
+                                        className={`relative px-3 py-2 text-sm font-medium transition-all duration-300 ${
+                                            url === '/blog' || component === 'Public/Blog'
+                                                ? 'text-orange-600 bg-orange-50 rounded-lg'
+                                                : 'text-gray-700 hover:text-orange-600 hover:bg-orange-50 rounded-lg'
+                                        }`}
+                                    >
+                                        Blog
+                                        {(url === '/blog' || component === 'Public/Blog') && (
+                                            <span className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-1 h-1 bg-orange-600 rounded-full"></span>
+                                        )}
+                                    </Link>
+                                    <Link
+                                        href="/reservations"
+                                        className={`relative px-3 py-2 text-sm font-medium transition-all duration-300 ${
+                                            url === '/reservations' || component === 'Public/Reservations'
+                                                ? 'text-orange-600 bg-orange-50 rounded-lg'
+                                                : 'text-gray-700 hover:text-orange-600 hover:bg-orange-50 rounded-lg'
+                                        }`}
+                                    >
+                                        Reservations
+                                        {(url === '/reservations' || component === 'Public/Reservations') && (
+                                            <span className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-1 h-1 bg-orange-600 rounded-full"></span>
+                                        )}
+                                    </Link>
+                                    <Link
+                                        href="/about"
+                                        className={`relative px-3 py-2 text-sm font-medium transition-all duration-300 ${
+                                            url === '/about' || component === 'Public/About'
+                                                ? 'text-orange-600 bg-orange-50 rounded-lg'
+                                                : 'text-gray-700 hover:text-orange-600 hover:bg-orange-50 rounded-lg'
+                                        }`}
+                                    >
+                                        About
+                                        {(url === '/about' || component === 'Public/About') && (
+                                            <span className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-1 h-1 bg-orange-600 rounded-full"></span>
+                                        )}
+                                    </Link>
+                                    <Link
+                                        href="/contact"
+                                        className={`relative px-3 py-2 text-sm font-medium transition-all duration-300 ${
+                                            url === '/contact' || component === 'Public/Contact'
+                                                ? 'text-orange-600 bg-orange-50 rounded-lg'
+                                                : 'text-gray-700 hover:text-orange-600 hover:bg-orange-50 rounded-lg'
+                                        }`}
+                                    >
+                                        Contact
+                                        {(url === '/contact' || component === 'Public/Contact') && (
+                                            <span className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-1 h-1 bg-orange-600 rounded-full"></span>
+                                        )}
+                                    </Link>
+                                </>
+                            )}
                         </div>
 
-                        {/* Auth Buttons */}
+                        {/* Auth Buttons / User Menu */}
                         <div className="flex items-center space-x-3 ml-4 z-10">
-                            <Link
-                                href="/register"
-                                className="text-gray-700 hover:text-orange-600 px-4 py-2 text-sm font-medium transition-colors duration-200 border border-gray-300 hover:border-orange-300 rounded-lg hover:bg-orange-50"
-                            >
-                                Sign Up
-                            </Link>
-
-                            {/* Reserve a Table Button */}
-                            <Link
-                                href="/reservations"
-                                className="bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 shadow-md hover:shadow-lg transform hover:scale-105"
-                            >
-                                Reserve a Table
-                            </Link>
+                            {isAuthenticated ? (
+                                // User dropdown for authenticated users
+                                <div className="flex items-center space-x-3">
+                                    <div className="flex items-center space-x-2 bg-gray-50 px-3 py-2 rounded-lg">
+                                        <div className="w-8 h-8 bg-orange-500 rounded-full flex items-center justify-center text-white font-medium text-sm">
+                                            {user.name.charAt(0).toUpperCase()}
+                                        </div>
+                                        <span className="text-sm font-medium text-gray-700">{user.name}</span>
+                                    </div>
+                                    <Dropdown>
+                                        <Dropdown.Trigger>
+                                            <button className="flex items-center text-gray-500 hover:text-gray-700">
+                                                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                                                </svg>
+                                            </button>
+                                        </Dropdown.Trigger>
+                                        <Dropdown.Content align="right">
+                                            <Dropdown.Link href={route('profile.edit')}>
+                                                Profile
+                                            </Dropdown.Link>
+                                            <Dropdown.Link
+                                                href={route('logout')}
+                                                method="post"
+                                                as="button"
+                                                className="w-full text-left"
+                                            >
+                                                Logout
+                                            </Dropdown.Link>
+                                        </Dropdown.Content>
+                                    </Dropdown>
+                                </div>
+                            ) : (
+                                // Guest buttons
+                                <>
+                                    <Link
+                                        href="/login"
+                                        className="text-gray-700 hover:text-orange-600 px-4 py-2 text-sm font-medium transition-colors duration-200 border border-gray-300 hover:border-orange-300 rounded-lg hover:bg-orange-50"
+                                    >
+                                        Sign In
+                                    </Link>
+                                    <Link
+                                        href="/reservations"
+                                        className="bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 shadow-md hover:shadow-lg transform hover:scale-105"
+                                    >
+                                        Reserve a Table
+                                    </Link>
+                                </>
+                            )}
                         </div>
                     </div>
                 </div>
@@ -155,7 +280,7 @@ export default function PublicLayout({ children }) {
                                 href="/blog"
                                 className="text-[#8C6E59] hover:text-orange-600 px-3 py-2 text-sm font-medium transition-colors duration-200"
                             >
-                                Events
+                                Blog
                             </Link>
                         </div>
 

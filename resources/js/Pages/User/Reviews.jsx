@@ -1,9 +1,9 @@
-import UserLayout from '@/Layouts/UserLayout';
+import PublicLayout from '@/Layouts/PublicLayout';
 import { Head } from '@inertiajs/react';
 
 export default function Reviews() {
     return (
-        <UserLayout>
+        <PublicLayout>
             <Head title="Reviews - Bistro Bella" />
 
             <div className="py-12">
@@ -195,6 +195,6 @@ export default function Reviews() {
                     </div>
                 </div>
             </div>
-        </UserLayout>
+        </PublicLayout>
     );
 }

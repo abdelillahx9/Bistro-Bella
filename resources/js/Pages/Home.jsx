@@ -1,9 +1,9 @@
-import UserLayout from '@/Layouts/UserLayout';
+import PublicLayout from '@/Layouts/PublicLayout';
 import { Head } from '@inertiajs/react';
 
 export default function Home() {
     return (
-        <UserLayout>
+        <PublicLayout>
             <Head title="Dashboard" />
 
             <div className="py-12">
@@ -35,6 +35,6 @@ export default function Home() {
                     </div>
                 </div>
             </div>
-        </UserLayout>
+        </PublicLayout>
     );
 }

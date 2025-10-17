@@ -40,6 +40,9 @@ class DatabaseSeeder extends Seeder
         // Seed tags
         $this->call(\Database\Seeders\TagSeeder::class);
 
+        // Seed menu items
+        $this->call(\Database\Seeders\MenuSeeder::class);
+
         // Seed reservations
         $this->call(\Database\Seeders\ReservationSeeder::class);
 
