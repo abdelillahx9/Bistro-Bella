@@ -3,7 +3,7 @@
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\PublicController;
-use App\Http\Controllers\UserController;
+use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\ReservationController;
 use App\Http\Controllers\Admin\RestaurantTableController;
@@ -66,9 +66,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::prefix('user')->name('user.')->group(function () {
         Route::get('/profile', [UserController::class, 'profile'])->name('profile');
-        Route::get('/reviews', function () {
-            return Inertia::render('User/Reviews');
-        })->name('reviews');
+        Route::get('/reviews', [ReviewController::class, 'index'])->name('reviews');
+        Route::post('/reviews', [ReviewController::class, 'store'])->name('reviews.store');
+        Route::put('/reviews/{review}', [ReviewController::class, 'update'])->name('reviews.update');
+        Route::delete('/reviews/{review}', [ReviewController::class, 'destroy'])->name('reviews.destroy');
         Route::get('/activity', [UserController::class, 'activity'])->name('activity');
     });
 });
