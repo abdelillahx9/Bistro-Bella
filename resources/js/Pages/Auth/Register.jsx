@@ -2,7 +2,7 @@ import InputError from '@/Components/InputError';
 import InputLabel from '@/Components/InputLabel';
 import PrimaryButton from '@/Components/PrimaryButton';
 import TextInput from '@/Components/TextInput';
-import GuestLayout from '@/Layouts/GuestLayout';
+import PublicLayout from '@/Layouts/PublicLayout';
 import { Head, Link, useForm } from '@inertiajs/react';
 
 export default function Register() {
@@ -22,10 +22,23 @@ export default function Register() {
     };
 
     return (
-        <GuestLayout>
+        <PublicLayout>
             <Head title="Register" />
 
-            <form onSubmit={submit}>
+            <div className="flex min-h-screen flex-col items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
+                <div className="w-full max-w-md space-y-8">
+                    <div className="text-center">
+                        <h2 className="text-3xl font-bold text-gray-900">Create your account</h2>
+                        <p className="mt-2 text-sm text-gray-600">
+                            Or{' '}
+                            <Link href={route('login')} className="font-medium text-orange-600 hover:text-orange-500">
+                                sign in to existing account
+                            </Link>
+                        </p>
+                    </div>
+
+                    <div className="bg-white py-8 px-6 shadow-lg rounded-lg">
+                        <form onSubmit={submit} className="space-y-6">
                 <div>
                     <InputLabel htmlFor="name" value="Name" />
 
@@ -115,6 +128,9 @@ export default function Register() {
                     </PrimaryButton>
                 </div>
             </form>
-        </GuestLayout>
+                    </div>
+                </div>
+            </div>
+        </PublicLayout>
     );
 }
