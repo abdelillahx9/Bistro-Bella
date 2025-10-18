@@ -1,27 +1,11 @@
 import UserLayout from '@/Layouts/UserLayout';
 import { Head, usePage } from '@inertiajs/react';
 
-export default function Dashboard() {
+export default function Dashboard({ upcomingReservation, reservationStats }) {
     const { auth } = usePage().props;
     const user = auth.user;
 
-    // Mock data - in real app this would come from props
-    const upcomingReservation = {
-        date: '2024-12-20',
-        time: '7:00 PM',
-        guests: 4,
-        tableNumber: '12',
-        branch: 'Downtown',
-        status: 'confirmed'
-    };
-
-    const reservationStats = {
-        totalReservations: 24,
-        lastVisited: '2024-12-15',
-        favoriteDish: 'Pasta Primavera',
-        averageGroupSize: 3.2
-    };
-
+    // Mock data for special offers - in real app this would come from props
     const specialOffers = [
         {
             id: 1,
@@ -116,7 +100,7 @@ export default function Dashboard() {
                                             </div>
                                             <div>
                                                 <p className="text-gray-500">Table</p>
-                                                <p className="font-medium text-gray-900">{upcomingReservation.tableNumber}</p>
+                                                <p className="font-medium text-gray-900">{upcomingReservation.table_number}</p>
                                             </div>
                                         </div>
 
