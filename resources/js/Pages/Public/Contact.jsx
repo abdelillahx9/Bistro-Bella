@@ -1,7 +1,22 @@
 import PublicLayout from '@/Layouts/PublicLayout';
-import { Head } from '@inertiajs/react';
+import { Head, useForm } from '@inertiajs/react';
 
 export default function Contact() {
+    const { data, setData, post, processing, errors, reset } = useForm({
+        name: '',
+        email: '',
+        subject: '',
+        message: '',
+    });
+
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        post(route('public.contact.store'), {
+            onSuccess: () => {
+                reset();
+            },
+        });
+    };
     return (
         <PublicLayout>
             <Head title="Contact - Bistro Bella" />
@@ -32,7 +47,7 @@ export default function Contact() {
                                 </p>
                             </div>
 
-                            <form className="space-y-6">
+                            <form onSubmit={handleSubmit} className="space-y-6">
                                 {/* Name Field */}
                                 <div>
                                     <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-2">
@@ -42,9 +57,13 @@ export default function Contact() {
                                         type="text"
                                         id="name"
                                         name="name"
+                                        value={data.name}
+                                        onChange={(e) => setData('name', e.target.value)}
                                         className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-colors duration-200 bg-white"
                                         placeholder="Enter your full name"
+                                        required
                                     />
+                                    {errors.name && <p className="mt-1 text-sm text-red-600">{errors.name}</p>}
                                 </div>
 
                                 {/* Email Field */}
@@ -56,9 +75,30 @@ export default function Contact() {
                                         type="email"
                                         id="email"
                                         name="email"
+                                        value={data.email}
+                                        onChange={(e) => setData('email', e.target.value)}
                                         className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-colors duration-200 bg-white"
                                         placeholder="Enter your email address"
+                                        required
                                     />
+                                    {errors.email && <p className="mt-1 text-sm text-red-600">{errors.email}</p>}
+                                </div>
+
+                                {/* Subject Field */}
+                                <div>
+                                    <label htmlFor="subject" className="block text-sm font-medium text-gray-700 mb-2">
+                                        Subject
+                                    </label>
+                                    <input
+                                        type="text"
+                                        id="subject"
+                                        name="subject"
+                                        value={data.subject}
+                                        onChange={(e) => setData('subject', e.target.value)}
+                                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-colors duration-200 bg-white"
+                                        placeholder="What's this about?"
+                                    />
+                                    {errors.subject && <p className="mt-1 text-sm text-red-600">{errors.subject}</p>}
                                 </div>
 
                                 {/* Message Field */}
@@ -70,18 +110,23 @@ export default function Contact() {
                                         id="message"
                                         name="message"
                                         rows="6"
+                                        value={data.message}
+                                        onChange={(e) => setData('message', e.target.value)}
                                         className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-colors duration-200 bg-white resize-vertical"
                                         placeholder="Tell us how we can help you..."
+                                        required
                                     ></textarea>
+                                    {errors.message && <p className="mt-1 text-sm text-red-600">{errors.message}</p>}
                                 </div>
 
                                 {/* Submit Button */}
                                 <div>
                                     <button
                                         type="submit"
-                                        className="bg-orange-500 hover:bg-orange-600 text-white px-8 py-3 rounded-lg text-lg font-semibold transition-all duration-200 shadow-lg hover:shadow-xl transform hover:scale-105"
+                                        disabled={processing}
+                                        className="bg-orange-500 hover:bg-orange-600 disabled:bg-orange-300 text-white px-8 py-3 rounded-lg text-lg font-semibold transition-all duration-200 shadow-lg hover:shadow-xl transform hover:scale-105 disabled:transform-none disabled:cursor-not-allowed"
                                     >
-                                        Send Message
+                                        {processing ? 'Sending...' : 'Send Message'}
                                     </button>
                                 </div>
                             </form>

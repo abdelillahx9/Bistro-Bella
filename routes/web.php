@@ -22,6 +22,7 @@ Route::get('/reservations', [PublicController::class, 'reservations'])->name('pu
 Route::post('/reservations', [PublicController::class, 'storeReservation'])->name('public.reservations.store');
 Route::get('/about', [PublicController::class, 'about'])->name('public.about');
 Route::get('/contact', [PublicController::class, 'contact'])->name('public.contact');
+Route::post('/contact', [PublicController::class, 'storeContact'])->name('public.contact.store');
 Route::get('/reserve', [PublicController::class, 'reserve'])->name('public.reserve');
 
 // User home page (protected route for authenticated users)

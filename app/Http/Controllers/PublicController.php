@@ -110,6 +110,26 @@ class PublicController extends Controller
         return Inertia::render('Public/Contact');
     }
 
+    public function storeContact(Request $request)
+    {
+        $validated = $request->validate([
+            'name' => 'required|string|max:100',
+            'email' => 'required|email|max:150',
+            'subject' => 'nullable|string|max:150',
+            'message' => 'required|string',
+        ]);
+
+        $contact = \App\Models\Contact::create([
+            'name' => $validated['name'],
+            'email' => $validated['email'],
+            'subject' => $validated['subject'],
+            'message' => $validated['message'],
+            'ip_address' => $request->ip(),
+        ]);
+
+        return redirect()->back()->with('success', 'Thank you for your message! We will get back to you soon.');
+    }
+
     public function reserve()
     {
         return redirect()->route('public.reservations');

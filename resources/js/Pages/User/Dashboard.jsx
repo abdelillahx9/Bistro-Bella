@@ -1,4 +1,4 @@
-import UserLayout from '@/Layouts/UserLayout';
+import PublicLayout from '@/Layouts/PublicLayout';
 import { Head, usePage } from '@inertiajs/react';
 
 export default function Dashboard({ upcomingReservation, reservationStats }) {
@@ -31,7 +31,7 @@ export default function Dashboard({ upcomingReservation, reservationStats }) {
     ];
 
     return (
-        <UserLayout>
+        <PublicLayout>
             <Head title="Dashboard - Bistro Bella" />
 
             <div className="min-h-screen bg-gray-50">
@@ -212,6 +212,6 @@ export default function Dashboard({ upcomingReservation, reservationStats }) {
 
                 </div>
             </div>
-        </UserLayout>
+        </PublicLayout>
     );
 }
