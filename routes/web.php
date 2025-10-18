@@ -66,7 +66,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::prefix('user')->name('user.')->group(function () {
         Route::get('/profile', [UserController::class, 'profile'])->name('profile');
-        Route::get('/reviews', [UserController::class, 'reviews'])->name('reviews');
+        Route::get('/reviews', function () {
+            return Inertia::render('User/Reviews');
+        })->name('reviews');
         Route::get('/activity', [UserController::class, 'activity'])->name('activity');
     });
 });
