@@ -40,14 +40,15 @@ export default function ForgotPassword({ status }) {
                                 <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
                                     Email Address
                                 </label>
-                                <TextInput
+                                <input
                                     id="email"
                                     type="email"
                                     name="email"
                                     value={data.email}
-                                    className="mt-1 block w-full"
-                                    isFocused={true}
                                     onChange={(e) => setData('email', e.target.value)}
+                                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-colors duration-200 bg-white"
+                                    placeholder="Enter your email address"
+                                    required
                                 />
                                 <InputError message={errors.email} className="mt-2" />
                             </div>

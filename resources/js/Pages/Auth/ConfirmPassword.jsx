@@ -38,15 +38,18 @@ export default function ConfirmPassword() {
 
                         <form onSubmit={submit} className="space-y-6">
                             <div>
-                                <InputLabel htmlFor="password" value="Password" />
-                                <TextInput
+                                <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-2">
+                                    Password
+                                </label>
+                                <input
                                     id="password"
                                     type="password"
                                     name="password"
                                     value={data.password}
-                                    className="mt-1 block w-full"
-                                    isFocused={true}
                                     onChange={(e) => setData('password', e.target.value)}
+                                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-colors duration-200 bg-white"
+                                    placeholder="Enter your password"
+                                    required
                                 />
                                 <InputError message={errors.password} className="mt-2" />
                             </div>
