@@ -211,7 +211,7 @@ export default function PublicLayout({ children }) {
                                             </button>
                                         </Dropdown.Trigger>
                                         <Dropdown.Content align="right">
-                                            <Dropdown.Link href={route('profile.edit')}>
+                                            <Dropdown.Link href={route('user.profile.edit')}>
                                                 Profile
                                             </Dropdown.Link>
                                             <Dropdown.Link

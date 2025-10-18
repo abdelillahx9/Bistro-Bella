@@ -44,17 +44,31 @@ Route::get('/dashboard', function () {
     return redirect()->route('home');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
+// Authenticated routes: legacy ProfileController handles update/delete logic
 Route::middleware('auth')->group(function () {
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    // Keep the update/delete endpoints using the existing ProfileController validation flow
+    // (these are used by form POSTs/patches but the public page is served by UserController)
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::patch('/profile/password', [ProfileController::class, 'updatePassword'])->name('password.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    // Keep an edit route (if other code expects profile.edit) but map it to ProfileController::edit
+    Route::get('/profile/edit', [ProfileController::class, 'edit'])->name('profile.edit');
 });
 
-// User routes (protected route for authenticated users only)
-Route::prefix('user')->name('user.')->middleware(['auth', 'verified'])->group(function () {
+// Serve the new profile UI at /profile and user-specific pages under /user
+Route::middleware(['auth', 'verified'])->group(function () {
+    // Public-facing profile page uses UserController (React/Inertia page)
     Route::get('/profile', [UserController::class, 'profile'])->name('profile');
-    Route::get('/reviews', [UserController::class, 'reviews'])->name('reviews');
-    Route::get('/activity', [UserController::class, 'activity'])->name('activity');
+    Route::get('/profile/edit', [UserController::class, 'editProfile'])->name('user.profile.edit');
+    Route::patch('/profile', [UserController::class, 'updateProfile'])->name('profile.update');
+    Route::patch('/profile/password', [UserController::class, 'updatePassword'])->name('profile.password.update');
+    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+
+    Route::prefix('user')->name('user.')->group(function () {
+        Route::get('/profile', [UserController::class, 'profile'])->name('profile');
+        Route::get('/reviews', [UserController::class, 'reviews'])->name('reviews');
+        Route::get('/activity', [UserController::class, 'activity'])->name('activity');
+    });
 });
 
 // Admin CRUD routes
