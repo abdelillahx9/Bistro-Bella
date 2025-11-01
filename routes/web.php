@@ -4,6 +4,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\PublicController;
 use App\Http\Controllers\ReviewController;
+use App\Http\Controllers\UserController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\ReservationController;
 use App\Http\Controllers\Admin\RestaurantTableController;
@@ -51,21 +52,18 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::patch('/profile/password', [ProfileController::class, 'updatePassword'])->name('password.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-    // Keep an edit route (if other code expects profile.edit) but map it to ProfileController::edit
-    Route::get('/profile/edit', [ProfileController::class, 'edit'])->name('profile.edit');
 });
 
 // Serve the new profile UI at /profile and user-specific pages under /user
 Route::middleware(['auth', 'verified'])->group(function () {
     // Public-facing profile page uses UserController (React/Inertia page)
     Route::get('/profile', [UserController::class, 'profile'])->name('profile');
-    Route::get('/profile/edit', [UserController::class, 'editProfile'])->name('user.profile.edit');
+    Route::get('/profile/edit', [UserController::class, 'editProfile'])->name('profile.edit');
     Route::patch('/profile', [UserController::class, 'updateProfile'])->name('profile.update');
     Route::patch('/profile/password', [UserController::class, 'updatePassword'])->name('profile.password.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
     Route::prefix('user')->name('user.')->group(function () {
-        Route::get('/profile', [UserController::class, 'profile'])->name('profile');
         Route::get('/reviews', [ReviewController::class, 'index'])->name('reviews');
         Route::post('/reviews', [ReviewController::class, 'store'])->name('reviews.store');
         Route::put('/reviews/{review}', [ReviewController::class, 'update'])->name('reviews.update');
