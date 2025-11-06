@@ -17,10 +17,11 @@ class UserController extends Controller
     {
         $user = auth()->user();
 
-        // Upcoming reservation (next one on or after today)
+        // Upcoming reservation (next one on or after today, not cancelled)
         $upcoming = Reservation::with('tables')
             ->where('user_id', $user->id)
             ->whereDate('reservation_date', '>=', Carbon::today())
+            ->where('status', '!=', 'cancelled')
             ->orderBy('reservation_date')
             ->orderBy('reservation_time')
             ->first();
@@ -46,6 +47,13 @@ class UserController extends Controller
         if ($userReviews) {
             $favoriteDish = $userReviews->name;
         }
+
+        // Get all reservations for history (limit to last 10 for performance)
+        $reservationHistory = Reservation::where('user_id', $user->id)
+            ->orderByDesc('reservation_date')
+            ->orderByDesc('reservation_time')
+            ->limit(10)
+            ->get();
 
         // Simple analytics
         $reservationStats = [
@@ -75,6 +83,7 @@ class UserController extends Controller
 
         return Inertia::render('User/Dashboard', [
             'upcomingReservation' => $upcoming,
+            'reservationHistory' => $reservationHistory,
             'reservationStats' => $reservationStats,
             'specialOffers' => $specialOffers,
         ]);

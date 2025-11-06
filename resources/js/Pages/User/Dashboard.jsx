@@ -2,37 +2,56 @@ import PublicLayout from '@/Layouts/PublicLayout';
 import { Head, usePage, Link, useForm } from '@inertiajs/react';
 import { useState } from 'react';
 
-export default function Dashboard({ upcomingReservation, reservationStats }) {
+export default function Dashboard({ upcomingReservation, reservationHistory, reservationStats }) {
     const { auth } = usePage().props;
     const user = auth.user;
     const [showModifyModal, setShowModifyModal] = useState(false);
     const [showCancelModal, setShowCancelModal] = useState(false);
+    const [selectedReservation, setSelectedReservation] = useState(null);
 
     const modifyForm = useForm({
-        reservation_date: upcomingReservation ? upcomingReservation.reservation_date : '',
-        reservation_time: upcomingReservation ? upcomingReservation.reservation_time : '',
-        guest_count: upcomingReservation ? upcomingReservation.guest_count : 1,
-        special_requests: upcomingReservation ? upcomingReservation.special_requests : '',
+        reservation_date: '',
+        reservation_time: '',
+        guest_count: 1,
+        special_requests: '',
     });
 
     const handleModifyReservation = () => {
-        modifyForm.patch(route('user.reservations.update', upcomingReservation.id), {
+        modifyForm.patch(route('user.reservations.update', selectedReservation.id), {
             preserveScroll: true,
             onSuccess: () => {
                 setShowModifyModal(false);
+                setSelectedReservation(null);
             }
         });
     };
 
     const handleCancelReservation = () => {
         if (confirm('Are you sure you want to cancel this reservation?')) {
-            modifyForm.patch(route('user.reservations.cancel', upcomingReservation.id), {
+            modifyForm.patch(route('user.reservations.cancel', selectedReservation.id), {
                 preserveScroll: true,
                 onSuccess: () => {
                     setShowCancelModal(false);
+                    setSelectedReservation(null);
                 }
             });
         }
+    };
+
+    const openModifyModal = (reservation) => {
+        setSelectedReservation(reservation);
+        modifyForm.setData({
+            reservation_date: reservation.reservation_date,
+            reservation_time: reservation.reservation_time,
+            guest_count: reservation.guest_count,
+            special_requests: reservation.special_requests || '',
+        });
+        setShowModifyModal(true);
+    };
+
+    const openCancelModal = (reservation) => {
+        setSelectedReservation(reservation);
+        setShowCancelModal(true);
     };
 
     // Mock data for special offers - in real app this would come from props
@@ -153,13 +172,13 @@ export default function Dashboard({ upcomingReservation, reservationStats }) {
 
                                         <div className="flex space-x-3 pt-4">
                                             <button
-                                                onClick={() => setShowModifyModal(true)}
+                                                onClick={() => openModifyModal(upcomingReservation)}
                                                 className="flex-1 bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors"
                                             >
                                                 Modify
                                             </button>
                                             <button
-                                                onClick={() => setShowCancelModal(true)}
+                                                onClick={() => openCancelModal(upcomingReservation)}
                                                 className="flex-1 bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors"
                                             >
                                                 Cancel
@@ -262,6 +281,102 @@ export default function Dashboard({ upcomingReservation, reservationStats }) {
                             </div>
                         </div>
 
+                    </div>
+
+                    {/* Reservation History Section */}
+                    <div className="mt-8">
+                        <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+                            <h2 className="text-2xl font-semibold text-gray-900 mb-6">Reservation History</h2>
+
+                            {reservationHistory && reservationHistory.length > 0 ? (
+                                <div className="overflow-x-auto">
+                                    <table className="min-w-full divide-y divide-gray-200">
+                                        <thead className="bg-gray-50">
+                                            <tr>
+                                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                                    Date & Time
+                                                </th>
+                                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                                    Guests
+                                                </th>
+                                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                                    Status
+                                                </th>
+                                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                                    Actions
+                                                </th>
+                                            </tr>
+                                        </thead>
+                                        <tbody className="bg-white divide-y divide-gray-200">
+                                            {reservationHistory.map((reservation) => (
+                                                <tr key={reservation.id} className="hover:bg-gray-50">
+                                                    <td className="px-6 py-4 whitespace-nowrap">
+                                                        <div className="text-sm text-gray-900">
+                                                            {new Date(reservation.reservation_date).toLocaleDateString('en-US', {
+                                                                month: 'short',
+                                                                day: 'numeric',
+                                                                year: 'numeric'
+                                                            })}
+                                                        </div>
+                                                        <div className="text-sm text-gray-500">
+                                                            {reservation.reservation_time}
+                                                        </div>
+                                                    </td>
+                                                    <td className="px-6 py-4 whitespace-nowrap">
+                                                        <div className="text-sm text-gray-900">
+                                                            {reservation.guest_count} {reservation.guest_count === 1 ? 'Guest' : 'Guests'}
+                                                        </div>
+                                                    </td>
+                                                    <td className="px-6 py-4 whitespace-nowrap">
+                                                        <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
+                                                            reservation.status === 'confirmed'
+                                                                ? 'bg-green-100 text-green-800'
+                                                                : reservation.status === 'pending'
+                                                                ? 'bg-yellow-100 text-yellow-800'
+                                                                : reservation.status === 'cancelled'
+                                                                ? 'bg-red-100 text-red-800'
+                                                                : reservation.status === 'seated'
+                                                                ? 'bg-blue-100 text-blue-800'
+                                                                : 'bg-gray-100 text-gray-800'
+                                                        }`}>
+                                                            {reservation.status.charAt(0).toUpperCase() + reservation.status.slice(1)}
+                                                        </span>
+                                                    </td>
+                                                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                                                        {reservation.status === 'confirmed' && new Date(reservation.reservation_date) >= new Date() ? (
+                                                            <div className="flex space-x-2">
+                                                                <button
+                                                                    onClick={() => openModifyModal(reservation)}
+                                                                    className="text-blue-600 hover:text-blue-900"
+                                                                >
+                                                                    Modify
+                                                                </button>
+                                                                <button
+                                                                    onClick={() => openCancelModal(reservation)}
+                                                                    className="text-red-600 hover:text-red-900"
+                                                                >
+                                                                    Cancel
+                                                                </button>
+                                                            </div>
+                                                        ) : (
+                                                            <span className="text-gray-400">-</span>
+                                                        )}
+                                                    </td>
+                                                </tr>
+                                            ))}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            ) : (
+                                <div className="text-center py-8">
+                                    <svg className="w-16 h-16 text-gray-300 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+                                    </svg>
+                                    <h3 className="text-lg font-medium text-gray-900 mb-2">No reservation history</h3>
+                                    <p className="text-gray-600">Your reservation history will appear here</p>
+                                </div>
+                            )}
+                        </div>
                     </div>
 
                 </div>
@@ -395,11 +510,11 @@ export default function Dashboard({ upcomingReservation, reservationStats }) {
                                 <p className="text-sm text-gray-600">
                                     Are you sure you want to cancel your reservation for{' '}
                                     <span className="font-medium">
-                                        {new Date(upcomingReservation.reservation_date).toLocaleDateString('en-US', {
+                                        {new Date(selectedReservation.reservation_date).toLocaleDateString('en-US', {
                                             weekday: 'long',
                                             month: 'long',
                                             day: 'numeric'
-                                        })} at {upcomingReservation.reservation_time}
+                                        })} at {selectedReservation.reservation_time}
                                     </span>
                                     ? This action cannot be undone.
                                 </p>
