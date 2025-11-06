@@ -170,4 +170,45 @@ class UserController extends Controller
     {
         return Inertia::render('User/Activity');
     }
+
+    public function updateReservation(Request $request, Reservation $reservation)
+    {
+        // Ensure the reservation belongs to the authenticated user
+        if ($reservation->user_id !== auth()->id()) {
+            abort(403, 'Unauthorized');
+        }
+
+        $request->validate([
+            'reservation_date' => 'required|date|after:today',
+            'reservation_time' => 'required|date_format:H:i',
+            'guest_count' => 'required|integer|min:1|max:20',
+            'special_requests' => 'nullable|string|max:1000',
+        ]);
+
+        $reservation->update([
+            'reservation_date' => $request->reservation_date,
+            'reservation_time' => $request->reservation_time,
+            'guest_count' => $request->guest_count,
+            'special_requests' => $request->special_requests,
+        ]);
+
+        return back()->with('success', 'Reservation updated successfully.');
+    }
+
+    public function cancelReservation(Request $request, Reservation $reservation)
+    {
+        // Ensure the reservation belongs to the authenticated user
+        if ($reservation->user_id !== auth()->id()) {
+            abort(403, 'Unauthorized');
+        }
+
+        // Only allow cancellation if the reservation is not in the past and not already cancelled
+        if ($reservation->reservation_date < now()->toDateString() || $reservation->status === 'cancelled') {
+            return back()->with('error', 'Cannot cancel this reservation.');
+        }
+
+        $reservation->update(['status' => 'cancelled']);
+
+        return back()->with('success', 'Reservation cancelled successfully.');
+    }
 }

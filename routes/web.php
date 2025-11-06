@@ -69,6 +69,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::put('/reviews/{review}', [ReviewController::class, 'update'])->name('reviews.update');
         Route::delete('/reviews/{review}', [ReviewController::class, 'destroy'])->name('reviews.destroy');
         Route::get('/activity', [UserController::class, 'activity'])->name('activity');
+
+        // Reservation management routes
+        Route::patch('/reservations/{reservation}', [UserController::class, 'updateReservation'])->name('reservations.update');
+        Route::patch('/reservations/{reservation}/cancel', [UserController::class, 'cancelReservation'])->name('reservations.cancel');
     });
 });
 

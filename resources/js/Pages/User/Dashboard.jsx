@@ -1,9 +1,39 @@
 import PublicLayout from '@/Layouts/PublicLayout';
-import { Head, usePage, Link } from '@inertiajs/react';
+import { Head, usePage, Link, useForm } from '@inertiajs/react';
+import { useState } from 'react';
 
 export default function Dashboard({ upcomingReservation, reservationStats }) {
     const { auth } = usePage().props;
     const user = auth.user;
+    const [showModifyModal, setShowModifyModal] = useState(false);
+    const [showCancelModal, setShowCancelModal] = useState(false);
+
+    const modifyForm = useForm({
+        reservation_date: upcomingReservation ? upcomingReservation.reservation_date : '',
+        reservation_time: upcomingReservation ? upcomingReservation.reservation_time : '',
+        guest_count: upcomingReservation ? upcomingReservation.guest_count : 1,
+        special_requests: upcomingReservation ? upcomingReservation.special_requests : '',
+    });
+
+    const handleModifyReservation = () => {
+        modifyForm.patch(route('user.reservations.update', upcomingReservation.id), {
+            preserveScroll: true,
+            onSuccess: () => {
+                setShowModifyModal(false);
+            }
+        });
+    };
+
+    const handleCancelReservation = () => {
+        if (confirm('Are you sure you want to cancel this reservation?')) {
+            modifyForm.patch(route('user.reservations.cancel', upcomingReservation.id), {
+                preserveScroll: true,
+                onSuccess: () => {
+                    setShowCancelModal(false);
+                }
+            });
+        }
+    };
 
     // Mock data for special offers - in real app this would come from props
     const specialOffers = [
@@ -122,10 +152,16 @@ export default function Dashboard({ upcomingReservation, reservationStats }) {
                                         </div>
 
                                         <div className="flex space-x-3 pt-4">
-                                            <button className="flex-1 bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors">
+                                            <button
+                                                onClick={() => setShowModifyModal(true)}
+                                                className="flex-1 bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors"
+                                            >
                                                 Modify
                                             </button>
-                                            <button className="flex-1 bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors">
+                                            <button
+                                                onClick={() => setShowCancelModal(true)}
+                                                className="flex-1 bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors"
+                                            >
                                                 Cancel
                                             </button>
                                         </div>
@@ -230,6 +266,163 @@ export default function Dashboard({ upcomingReservation, reservationStats }) {
 
                 </div>
             </div>
+
+            {/* Modify Reservation Modal */}
+            {showModifyModal && (
+                <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+                    <div className="bg-white rounded-xl max-w-md w-full max-h-[90vh] overflow-y-auto">
+                        <div className="p-6">
+                            <div className="flex items-center justify-between mb-6">
+                                <h3 className="text-xl font-semibold text-gray-900">Modify Reservation</h3>
+                                <button
+                                    onClick={() => setShowModifyModal(false)}
+                                    className="text-gray-400 hover:text-gray-600"
+                                >
+                                    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                                    </svg>
+                                </button>
+                            </div>
+
+                            <form onSubmit={(e) => { e.preventDefault(); handleModifyReservation(); }} className="space-y-4">
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                                        Reservation Date
+                                    </label>
+                                    <input
+                                        type="date"
+                                        value={modifyForm.data.reservation_date}
+                                        onChange={(e) => modifyForm.setData('reservation_date', e.target.value)}
+                                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
+                                        min={new Date().toISOString().split('T')[0]}
+                                        required
+                                    />
+                                    {modifyForm.errors.reservation_date && (
+                                        <p className="mt-1 text-sm text-red-600">{modifyForm.errors.reservation_date}</p>
+                                    )}
+                                </div>
+
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                                        Reservation Time
+                                    </label>
+                                    <input
+                                        type="time"
+                                        value={modifyForm.data.reservation_time}
+                                        onChange={(e) => modifyForm.setData('reservation_time', e.target.value)}
+                                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
+                                        required
+                                    />
+                                    {modifyForm.errors.reservation_time && (
+                                        <p className="mt-1 text-sm text-red-600">{modifyForm.errors.reservation_time}</p>
+                                    )}
+                                </div>
+
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                                        Number of Guests
+                                    </label>
+                                    <select
+                                        value={modifyForm.data.guest_count}
+                                        onChange={(e) => modifyForm.setData('guest_count', parseInt(e.target.value))}
+                                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
+                                        required
+                                    >
+                                        {[1,2,3,4,5,6,7,8,9,10].map(num => (
+                                            <option key={num} value={num}>{num} {num === 1 ? 'Guest' : 'Guests'}</option>
+                                        ))}
+                                    </select>
+                                    {modifyForm.errors.guest_count && (
+                                        <p className="mt-1 text-sm text-red-600">{modifyForm.errors.guest_count}</p>
+                                    )}
+                                </div>
+
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                                        Special Requests
+                                    </label>
+                                    <textarea
+                                        value={modifyForm.data.special_requests || ''}
+                                        onChange={(e) => modifyForm.setData('special_requests', e.target.value)}
+                                        rows={3}
+                                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
+                                        placeholder="Any special requests or dietary requirements..."
+                                    />
+                                    {modifyForm.errors.special_requests && (
+                                        <p className="mt-1 text-sm text-red-600">{modifyForm.errors.special_requests}</p>
+                                    )}
+                                </div>
+
+                                <div className="flex space-x-3 pt-4">
+                                    <button
+                                        type="button"
+                                        onClick={() => setShowModifyModal(false)}
+                                        className="flex-1 bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors"
+                                    >
+                                        Cancel
+                                    </button>
+                                    <button
+                                        type="submit"
+                                        disabled={modifyForm.processing}
+                                        className="flex-1 bg-orange-500 hover:bg-orange-600 disabled:bg-orange-300 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors"
+                                    >
+                                        {modifyForm.processing ? 'Updating...' : 'Update Reservation'}
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {/* Cancel Reservation Modal */}
+            {showCancelModal && (
+                <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+                    <div className="bg-white rounded-xl max-w-md w-full">
+                        <div className="p-6">
+                            <div className="flex items-center mb-4">
+                                <div className="flex-shrink-0">
+                                    <svg className="w-6 h-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z" />
+                                    </svg>
+                                </div>
+                                <div className="ml-3">
+                                    <h3 className="text-lg font-medium text-gray-900">Cancel Reservation</h3>
+                                </div>
+                            </div>
+
+                            <div className="mb-6">
+                                <p className="text-sm text-gray-600">
+                                    Are you sure you want to cancel your reservation for{' '}
+                                    <span className="font-medium">
+                                        {new Date(upcomingReservation.reservation_date).toLocaleDateString('en-US', {
+                                            weekday: 'long',
+                                            month: 'long',
+                                            day: 'numeric'
+                                        })} at {upcomingReservation.reservation_time}
+                                    </span>
+                                    ? This action cannot be undone.
+                                </p>
+                            </div>
+
+                            <div className="flex space-x-3">
+                                <button
+                                    onClick={() => setShowCancelModal(false)}
+                                    className="flex-1 bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors"
+                                >
+                                    Keep Reservation
+                                </button>
+                                <button
+                                    onClick={handleCancelReservation}
+                                    className="flex-1 bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors"
+                                >
+                                    Cancel Reservation
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            )}
         </PublicLayout>
     );
 }
