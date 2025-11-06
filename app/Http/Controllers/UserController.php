@@ -82,6 +82,12 @@ class UserController extends Controller
 
     public function updateProfile(Request $request)
     {
+        \Log::info('UpdateProfile called', [
+            'has_file' => $request->hasFile('profile_picture'),
+            'all_data' => $request->all(),
+            'files' => $request->allFiles()
+        ]);
+
         $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users,email,' . auth()->id(),
@@ -92,6 +98,7 @@ class UserController extends Controller
 
         // Handle profile picture upload
         if ($request->hasFile('profile_picture')) {
+            \Log::info('Processing profile picture upload');
             // Delete old profile picture if exists
             if ($user->profile_picture && Storage::disk('public')->exists($user->profile_picture)) {
                 Storage::disk('public')->delete($user->profile_picture);
@@ -99,6 +106,7 @@ class UserController extends Controller
 
             // Store new profile picture
             $path = $request->file('profile_picture')->store('profile-pictures', 'public');
+            \Log::info('File stored at: ' . $path);
             $user->profile_picture = $path;
         }
 

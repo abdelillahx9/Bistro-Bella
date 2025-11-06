@@ -197,8 +197,18 @@ export default function PublicLayout({ children }) {
                                 // User dropdown for authenticated users
                                 <div className="flex items-center space-x-3">
                                     <div className="flex items-center space-x-2 bg-gray-50 px-3 py-2 rounded-lg">
-                                        <div className="w-8 h-8 bg-orange-500 rounded-full flex items-center justify-center text-white font-medium text-sm">
-                                            {user.name.charAt(0).toUpperCase()}
+                                        <div className="w-8 h-8 rounded-full overflow-hidden flex items-center justify-center">
+                                            {user.profile_picture ? (
+                                                <img
+                                                    src={`/storage/${user.profile_picture}`}
+                                                    alt={user.name}
+                                                    className="w-full h-full object-cover"
+                                                />
+                                            ) : (
+                                                <div className="w-full h-full bg-orange-500 flex items-center justify-center text-white font-medium text-sm">
+                                                    {user.name.charAt(0).toUpperCase()}
+                                                </div>
+                                            )}
                                         </div>
                                         <span className="text-sm font-medium text-gray-700">{user.name}</span>
                                     </div>

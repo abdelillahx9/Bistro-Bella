@@ -49,7 +49,7 @@ Route::get('/dashboard', function () {
 Route::middleware('auth')->group(function () {
     // Keep the update/delete endpoints using the existing ProfileController validation flow
     // (these are used by form POSTs/patches but the public page is served by UserController)
-    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    // Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::patch('/profile/password', [ProfileController::class, 'updatePassword'])->name('password.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
@@ -59,7 +59,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     // Public-facing profile page uses UserController (React/Inertia page)
     Route::get('/profile', [UserController::class, 'profile'])->name('profile');
     Route::get('/profile/edit', [UserController::class, 'editProfile'])->name('profile.edit');
-    Route::patch('/profile', [UserController::class, 'updateProfile'])->name('profile.update');
+    Route::match(['patch', 'post'], '/profile', [UserController::class, 'updateProfile'])->name('profile.update');
     Route::patch('/profile/password', [UserController::class, 'updatePassword'])->name('profile.password.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 

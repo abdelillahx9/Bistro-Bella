@@ -4,7 +4,7 @@ import { useState } from 'react';
 
 export default function EditProfile({ user, mustVerifyEmail, status }) {
     const { flash } = usePage().props;
-    const [previewImage, setPreviewImage] = useState(user.profile_picture);
+    const [previewImage, setPreviewImage] = useState(user.profile_picture ? `/storage/${user.profile_picture}` : null);
 
     // Profile Information Form
     const profileForm = useForm({
@@ -15,7 +15,7 @@ export default function EditProfile({ user, mustVerifyEmail, status }) {
 
     const updateProfile = (e) => {
         e.preventDefault();
-        profileForm.patch(route('profile.update'), {
+        profileForm.post(route('profile.update'), {
             preserveScroll: true,
             onSuccess: () => {
                 // Handle success
@@ -142,7 +142,7 @@ export default function EditProfile({ user, mustVerifyEmail, status }) {
                                     <p className="mt-1 text-gray-600">Update your personal information</p>
                                 </div>
 
-                                <form onSubmit={updateProfile} className="space-y-6">
+                                <form onSubmit={updateProfile} encType="multipart/form-data" className="space-y-6">
                                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                         <div>
                                             <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-2">
