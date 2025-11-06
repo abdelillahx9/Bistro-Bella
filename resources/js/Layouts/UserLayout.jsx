@@ -130,7 +130,7 @@ export default function UserLayout({ children }) {
                                 </Dropdown.Trigger>
 
                                 <Dropdown.Content align="top" className="w-full">
-                                    <Dropdown.Link href={route('user.profile.edit')}>
+                                    <Dropdown.Link href={route('profile.edit')}>
                                         Profile Settings
                                     </Dropdown.Link>
                                     <Dropdown.Link
