@@ -18,7 +18,8 @@ class UserController extends Controller
         $user = auth()->user();
 
         // Upcoming reservation (next one on or after today)
-        $upcoming = Reservation::where('user_id', $user->id)
+        $upcoming = Reservation::with('tables')
+            ->where('user_id', $user->id)
             ->whereDate('reservation_date', '>=', Carbon::today())
             ->orderBy('reservation_date')
             ->orderBy('reservation_time')
@@ -31,11 +32,26 @@ class UserController extends Controller
             ->orderByDesc('reservation_time')
             ->first();
 
-        // Simple analytics placeholders
+        // Calculate favorite dish based on user's menu reviews
+        $favoriteDish = null;
+        $userReviews = \DB::table('menu_reviews')
+            ->join('menus', 'menu_reviews.menu_id', '=', 'menus.id')
+            ->where('menu_reviews.user_id', $user->id)
+            ->select('menus.name', 'menu_reviews.rating', \DB::raw('COUNT(*) as review_count'))
+            ->groupBy('menus.id', 'menus.name', 'menu_reviews.rating')
+            ->orderByDesc('menu_reviews.rating')
+            ->orderByDesc('review_count')
+            ->first();
+
+        if ($userReviews) {
+            $favoriteDish = $userReviews->name;
+        }
+
+        // Simple analytics
         $reservationStats = [
             'totalReservations' => $totalReservations,
             'lastVisited' => $lastReservation ? $lastReservation->reservation_date : null,
-            'favoriteDish' => null,
+            'favoriteDish' => $favoriteDish,
             'averageGroupSize' => (float) Reservation::where('user_id', $user->id)->avg('guest_count') ?? 0,
         ];
 

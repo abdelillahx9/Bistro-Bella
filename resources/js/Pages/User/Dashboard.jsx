@@ -1,5 +1,5 @@
 import PublicLayout from '@/Layouts/PublicLayout';
-import { Head, usePage } from '@inertiajs/react';
+import { Head, usePage, Link } from '@inertiajs/react';
 
 export default function Dashboard({ upcomingReservation, reservationStats }) {
     const { auth } = usePage().props;
@@ -49,18 +49,24 @@ export default function Dashboard({ upcomingReservation, reservationStats }) {
                                 </p>
                             </div>
                             <div className="flex flex-col sm:flex-row gap-3">
-                                <button className="bg-orange-500 hover:bg-orange-600 text-white px-6 py-3 rounded-lg font-medium transition-colors duration-200 flex items-center justify-center">
+                                <Link
+                                    href="/reservations"
+                                    className="bg-orange-500 hover:bg-orange-600 text-white px-6 py-3 rounded-lg font-medium transition-colors duration-200 flex items-center justify-center"
+                                >
                                     <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
                                     </svg>
                                     Make New Reservation
-                                </button>
-                                <button className="bg-white hover:bg-gray-50 text-gray-700 border border-gray-300 px-6 py-3 rounded-lg font-medium transition-colors duration-200 flex items-center justify-center">
+                                </Link>
+                                <Link
+                                    href="/menu"
+                                    className="bg-white hover:bg-gray-50 text-gray-700 border border-gray-300 px-6 py-3 rounded-lg font-medium transition-colors duration-200 flex items-center justify-center"
+                                >
                                     <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
                                     </svg>
                                     View Menu
-                                </button>
+                                </Link>
                             </div>
                         </div>
                     </div>
@@ -96,17 +102,23 @@ export default function Dashboard({ upcomingReservation, reservationStats }) {
                                         <div className="grid grid-cols-2 gap-4 text-sm">
                                             <div>
                                                 <p className="text-gray-500">Guests</p>
-                                                <p className="font-medium text-gray-900">{upcomingReservation.guests}</p>
+                                                <p className="font-medium text-gray-900">{upcomingReservation.guest_count}</p>
                                             </div>
                                             <div>
-                                                <p className="text-gray-500">Table</p>
-                                                <p className="font-medium text-gray-900">{upcomingReservation.table_number}</p>
+                                                <p className="text-gray-500">Status</p>
+                                                <p className="font-medium text-gray-900 capitalize">{upcomingReservation.status}</p>
                                             </div>
                                         </div>
 
                                         <div className="pt-2">
-                                            <p className="text-gray-500 text-sm">Location</p>
-                                            <p className="font-medium text-gray-900">{upcomingReservation.branch}</p>
+                                            <p className="text-gray-500 text-sm">Reservation Time</p>
+                                            <p className="font-medium text-gray-900">
+                                                {new Date(upcomingReservation.reservation_date).toLocaleDateString('en-US', {
+                                                    weekday: 'long',
+                                                    month: 'long',
+                                                    day: 'numeric'
+                                                })} at {upcomingReservation.reservation_time}
+                                            </p>
                                         </div>
 
                                         <div className="flex space-x-3 pt-4">
@@ -125,9 +137,12 @@ export default function Dashboard({ upcomingReservation, reservationStats }) {
                                         </svg>
                                         <h3 className="text-lg font-medium text-gray-900 mb-2">No upcoming reservations</h3>
                                         <p className="text-gray-600 mb-6">Book your next dining experience</p>
-                                        <button className="bg-orange-500 hover:bg-orange-600 text-white px-6 py-3 rounded-lg font-medium transition-colors">
+                                        <Link
+                                            href="/reservations"
+                                            className="bg-orange-500 hover:bg-orange-600 text-white px-6 py-3 rounded-lg font-medium transition-colors"
+                                        >
                                             Book a Table
-                                        </button>
+                                        </Link>
                                     </div>
                                 )}
                             </div>
@@ -150,25 +165,28 @@ export default function Dashboard({ upcomingReservation, reservationStats }) {
                                         <div className="flex justify-between items-center mb-3">
                                             <span className="text-sm text-gray-600">Last Visit</span>
                                             <span className="text-sm font-medium text-gray-900">
-                                                {new Date(reservationStats.lastVisited).toLocaleDateString('en-US', {
-                                                    month: 'short',
-                                                    day: 'numeric',
-                                                    year: 'numeric'
-                                                })}
+                                                {reservationStats.lastVisited
+                                                    ? new Date(reservationStats.lastVisited).toLocaleDateString('en-US', {
+                                                        month: 'short',
+                                                        day: 'numeric',
+                                                        year: 'numeric'
+                                                    })
+                                                    : 'No visits yet'
+                                                }
                                             </span>
                                         </div>
 
                                         <div className="flex justify-between items-center mb-3">
                                             <span className="text-sm text-gray-600">Favorite Dish</span>
                                             <span className="text-sm font-medium text-gray-900">
-                                                {reservationStats.favoriteDish}
+                                                {reservationStats.favoriteDish || 'Not available'}
                                             </span>
                                         </div>
 
                                         <div className="flex justify-between items-center">
                                             <span className="text-sm text-gray-600">Avg Group Size</span>
                                             <span className="text-sm font-medium text-gray-900">
-                                                {reservationStats.averageGroupSize}
+                                                {reservationStats.averageGroupSize > 0 ? reservationStats.averageGroupSize.toFixed(1) : 'N/A'}
                                             </span>
                                         </div>
                                     </div>
