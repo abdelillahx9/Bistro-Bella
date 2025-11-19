@@ -1,7 +1,8 @@
 import AuthenticatedLayout from '@/Layouts/AdminLayout';
 import { Head } from '@inertiajs/react';
+import Card from '@/Components/Card';
 
-export default function Dashboard({ totalReservationsToday, totalActiveTables, totalReviewsToday, averageRatingToday, fiveStarReviewsToday, upcomingReservations = [] }) {
+export default function Dashboard({ totalReservationsToday, totalActiveTables, totalReviews, upcomingReservations = [] }) {
     return (
         <AuthenticatedLayout
             header={
@@ -17,20 +18,9 @@ export default function Dashboard({ totalReservationsToday, totalActiveTables, t
                     <div className="overflow-hidden bg-white shadow-sm sm:rounded-lg">
                         <div className="p-6 text-gray-900">
                             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                                <div className="bg-gray-50 p-6 rounded-lg shadow-sm">
-                                    <h3 className="text-sm font-medium text-gray-900 mb-2">Total Reviews Today</h3>
-                                    <div className="text-3xl font-bold text-gray-900">{totalReviewsToday}</div>
-                                </div>
-
-                                <div className="bg-gray-50 p-6 rounded-lg shadow-sm">
-                                    <h3 className="text-sm font-medium text-gray-900 mb-2">Average Rating Today</h3>
-                                    <div className="text-3xl font-bold text-gray-900">{averageRatingToday}</div>
-                                </div>
-
-                                <div className="bg-gray-50 p-6 rounded-lg shadow-sm">
-                                    <h3 className="text-sm font-medium text-gray-900 mb-2">5-Star Reviews Today</h3>
-                                    <div className="text-3xl font-bold text-gray-900">{fiveStarReviewsToday}</div>
-                                </div>
+                                <Card title="Total Reservations Today" value={totalReservationsToday} />
+                                <Card title="Total Active Tables" value={totalActiveTables} />
+                                <Card title="Total Reviews" value={totalReviews} />
                             </div>
 
                             <div className="mt-8">

@@ -23,9 +23,7 @@ class DashboardController extends Controller
 
         $totalActiveTables = RestaurantTable::where('is_active', true)->count();
 
-        $totalReviewsToday = MenuReview::whereDate('created_at', today())->count();
-        $averageRatingToday = MenuReview::whereDate('created_at', today())->avg('rating') ?? 0;
-        $fiveStarReviewsToday = MenuReview::whereDate('created_at', today())->where('rating', 5)->count();
+        $totalReviews = MenuReview::count();
 
         $upcomingReservations = Reservation::with('user')
             ->where('reservation_date', today())
@@ -36,9 +34,7 @@ class DashboardController extends Controller
         return Inertia::render('Admin/Dashboard', [
             'totalReservationsToday' => $totalReservationsToday,
             'totalActiveTables' => $totalActiveTables,
-            'totalReviewsToday' => $totalReviewsToday,
-            'averageRatingToday' => round($averageRatingToday, 1),
-            'fiveStarReviewsToday' => $fiveStarReviewsToday,
+            'totalReviews' => $totalReviews,
             'upcomingReservations' => $upcomingReservations,
         ]);
     }
