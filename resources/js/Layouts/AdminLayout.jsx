@@ -119,8 +119,48 @@ export default function AuthenticatedLayout({ header, children }) {
             <div className="flex flex-1 flex-col overflow-hidden">
                 {header && (
                     <header className="flex h-16 items-center bg-white shadow">
-                        <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
-                            {header}
+                        <div className="flex justify-between items-center w-full max-w-7xl px-4 sm:px-6 lg:px-8">
+                            <div>{header}</div>
+                            <div className="flex items-center space-x-3">
+                                <div className="flex items-center space-x-2 bg-gray-50 px-3 py-2 rounded-lg">
+                                    <div className="w-8 h-8 rounded-full overflow-hidden flex items-center justify-center">
+                                        {user.profile_picture ? (
+                                            <img
+                                                src={`/storage/${user.profile_picture}`}
+                                                alt={user.name}
+                                                className="w-full h-full object-cover"
+                                            />
+                                        ) : (
+                                            <div className="w-full h-full bg-orange-500 flex items-center justify-center text-white font-medium text-sm">
+                                                {user.name.charAt(0).toUpperCase()}
+                                            </div>
+                                        )}
+                                    </div>
+                                    <span className="text-sm font-medium text-gray-700">{user.name}</span>
+                                </div>
+                                <Dropdown>
+                                    <Dropdown.Trigger>
+                                        <button className="flex items-center text-gray-500 hover:text-gray-700">
+                                            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                                            </svg>
+                                        </button>
+                                    </Dropdown.Trigger>
+                                    <Dropdown.Content align="right">
+                                        <Dropdown.Link href={route('profile.edit')}>
+                                            Profile
+                                        </Dropdown.Link>
+                                        <Dropdown.Link
+                                            href={route('logout')}
+                                            method="post"
+                                            as="button"
+                                            className="w-full text-left"
+                                        >
+                                            Logout
+                                        </Dropdown.Link>
+                                    </Dropdown.Content>
+                                </Dropdown>
+                            </div>
                         </div>
                     </header>
                 )}

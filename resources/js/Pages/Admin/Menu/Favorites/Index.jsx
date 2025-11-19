@@ -1,4 +1,4 @@
-import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
+import AuthenticatedLayout from '@/Layouts/AdminLayout';
 import { Head, Link } from '@inertiajs/react';
 import { useState } from 'react';
 
