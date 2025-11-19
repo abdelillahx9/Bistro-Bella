@@ -6,6 +6,9 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
+use App\Models\Reservation;
+use App\Models\RestaurantTable;
+use App\Models\MenuReview;
 
 class DashboardController extends Controller
 {
@@ -14,6 +17,29 @@ class DashboardController extends Controller
      */
     public function index(): Response
     {
-        return Inertia::render('Admin/Dashboard');
+        $totalReservationsToday = Reservation::where('reservation_date', today())
+            ->where('status', '!=', 'cancelled')
+            ->count();
+
+        $totalActiveTables = RestaurantTable::where('is_active', true)->count();
+
+        $totalReviewsToday = MenuReview::whereDate('created_at', today())->count();
+        $averageRatingToday = MenuReview::whereDate('created_at', today())->avg('rating') ?? 0;
+        $fiveStarReviewsToday = MenuReview::whereDate('created_at', today())->where('rating', 5)->count();
+
+        $upcomingReservations = Reservation::with('user')
+            ->where('reservation_date', today())
+            ->where('status', '!=', 'cancelled')
+            ->orderBy('reservation_time')
+            ->get();
+
+        return Inertia::render('Admin/Dashboard', [
+            'totalReservationsToday' => $totalReservationsToday,
+            'totalActiveTables' => $totalActiveTables,
+            'totalReviewsToday' => $totalReviewsToday,
+            'averageRatingToday' => round($averageRatingToday, 1),
+            'fiveStarReviewsToday' => $fiveStarReviewsToday,
+            'upcomingReservations' => $upcomingReservations,
+        ]);
     }
 }

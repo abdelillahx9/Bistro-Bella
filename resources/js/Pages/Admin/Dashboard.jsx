@@ -1,7 +1,7 @@
 import AuthenticatedLayout from '@/Layouts/AdminLayout';
 import { Head } from '@inertiajs/react';
 
-export default function Dashboard() {
+export default function Dashboard({ totalReservationsToday, totalActiveTables, totalReviewsToday, averageRatingToday, fiveStarReviewsToday, upcomingReservations = [] }) {
     return (
         <AuthenticatedLayout
             header={
@@ -16,64 +16,60 @@ export default function Dashboard() {
                 <div className="mx-auto max-w-7xl sm:px-6 lg:px-8">
                     <div className="overflow-hidden bg-white shadow-sm sm:rounded-lg">
                         <div className="p-6 text-gray-900">
-                            <h1 className="text-2xl font-bold mb-4">Welcome to Admin Dashboard!</h1>
-                            <p className="text-lg mb-6">
-                                You're logged in as an administrator. Manage your restaurant operations from here.
-                            </p>
-
-                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                                <div className="bg-blue-100 p-6 rounded-lg border-l-4 border-blue-500">
-                                    <h3 className="text-lg font-semibold text-blue-800 mb-2">Users Management</h3>
-                                    <p className="text-blue-600 text-sm">Manage user accounts and permissions</p>
-                                    <div className="mt-4">
-                                        <span className="text-2xl font-bold text-blue-800">0</span>
-                                        <span className="text-blue-600 text-sm ml-2">Total Users</span>
-                                    </div>
+                            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                                <div className="bg-gray-50 p-6 rounded-lg shadow-sm">
+                                    <h3 className="text-sm font-medium text-gray-900 mb-2">Total Reviews Today</h3>
+                                    <div className="text-3xl font-bold text-gray-900">{totalReviewsToday}</div>
                                 </div>
 
-                                <div className="bg-green-100 p-6 rounded-lg border-l-4 border-green-500">
-                                    <h3 className="text-lg font-semibold text-green-800 mb-2">Orders</h3>
-                                    <p className="text-green-600 text-sm">View and manage customer orders</p>
-                                    <div className="mt-4">
-                                        <span className="text-2xl font-bold text-green-800">0</span>
-                                        <span className="text-green-600 text-sm ml-2">Pending Orders</span>
-                                    </div>
+                                <div className="bg-gray-50 p-6 rounded-lg shadow-sm">
+                                    <h3 className="text-sm font-medium text-gray-900 mb-2">Average Rating Today</h3>
+                                    <div className="text-3xl font-bold text-gray-900">{averageRatingToday}</div>
                                 </div>
 
-                                <div className="bg-orange-100 p-6 rounded-lg border-l-4 border-orange-500">
-                                    <h3 className="text-lg font-semibold text-orange-800 mb-2">Menu Management</h3>
-                                    <p className="text-orange-600 text-sm">Add, edit, and organize menu items</p>
-                                    <div className="mt-4">
-                                        <span className="text-2xl font-bold text-orange-800">0</span>
-                                        <span className="text-orange-600 text-sm ml-2">Menu Items</span>
-                                    </div>
-                                </div>
-
-                                <div className="bg-purple-100 p-6 rounded-lg border-l-4 border-purple-500">
-                                    <h3 className="text-lg font-semibold text-purple-800 mb-2">Analytics</h3>
-                                    <p className="text-purple-600 text-sm">View reports and statistics</p>
-                                    <div className="mt-4">
-                                        <span className="text-2xl font-bold text-purple-800">$0</span>
-                                        <span className="text-purple-600 text-sm ml-2">Total Revenue</span>
-                                    </div>
+                                <div className="bg-gray-50 p-6 rounded-lg shadow-sm">
+                                    <h3 className="text-sm font-medium text-gray-900 mb-2">5-Star Reviews Today</h3>
+                                    <div className="text-3xl font-bold text-gray-900">{fiveStarReviewsToday}</div>
                                 </div>
                             </div>
 
                             <div className="mt-8">
-                                <h2 className="text-xl font-semibold mb-4">Quick Actions</h2>
-                                <div className="flex flex-wrap gap-4">
-                                    <button className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-md transition-colors">
-                                        Add New User
-                                    </button>
-                                    <button className="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-md transition-colors">
-                                        Add Menu Item
-                                    </button>
-                                    <button className="bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded-md transition-colors">
-                                        View Reports
-                                    </button>
-                                    <button className="bg-purple-500 hover:bg-purple-600 text-white px-4 py-2 rounded-md transition-colors">
-                                        System Settings
-                                    </button>
+                                <h2 className="text-xl font-semibold mb-4">Today's Reservations</h2>
+                                <div className="bg-white overflow-hidden shadow-sm sm:rounded-lg">
+                                    <div className="p-6">
+                                        {upcomingReservations.length > 0 ? (
+                                            <div className="overflow-x-auto">
+                                                <table className="min-w-full divide-y divide-gray-200">
+                                                    <thead className="bg-gray-50">
+                                                        <tr>
+                                                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
+                                                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Time</th>
+                                                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Contact</th>
+                                                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Guests</th>
+                                                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody className="bg-white divide-y divide-gray-200">
+                                                        {upcomingReservations.map((reservation) => (
+                                                            <tr key={reservation.id}>
+                                                                <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{reservation.name}</td>
+                                                                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{reservation.reservation_time}</td>
+                                                                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{reservation.phone || reservation.email}</td>
+                                                                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{reservation.guest_count}</td>
+                                                                <td className="px-6 py-4 whitespace-nowrap">
+                                                                    <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${reservation.status_color}`}>
+                                                                        {reservation.status}
+                                                                    </span>
+                                                                </td>
+                                                            </tr>
+                                                        ))}
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        ) : (
+                                            <p className="text-gray-500">No reservations for today.</p>
+                                        )}
+                                    </div>
                                 </div>
                             </div>
                         </div>
