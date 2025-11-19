@@ -8,6 +8,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\ReservationController;
 use App\Http\Controllers\Admin\RestaurantTableController;
+use App\Http\Controllers\Admin\ContactController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
@@ -80,6 +81,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
 Route::prefix('admin')->name('admin.')->middleware(['auth','verified','admin'])->group(function () {
     Route::resource('reservations', ReservationController::class);
     Route::resource('tables', RestaurantTableController::class);
+    Route::resource('contacts', ContactController::class)->only(['index']);
     Route::get('/profile/edit', [UserController::class, 'adminEditProfile'])->name('profile.edit');
 });
 
