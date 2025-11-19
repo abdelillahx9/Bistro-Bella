@@ -80,6 +80,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
 Route::prefix('admin')->name('admin.')->middleware(['auth','verified','admin'])->group(function () {
     Route::resource('reservations', ReservationController::class);
     Route::resource('tables', RestaurantTableController::class);
+    Route::get('/profile/edit', [UserController::class, 'adminEditProfile'])->name('profile.edit');
 });
 
 // load menu routes

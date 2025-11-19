@@ -105,6 +105,15 @@ class UserController extends Controller
         ]);
     }
 
+    public function adminEditProfile()
+    {
+        return Inertia::render('Admin/Profile/Edit', [
+            'user' => auth()->user(),
+            'mustVerifyEmail' => auth()->user() instanceof \Illuminate\Contracts\Auth\MustVerifyEmail,
+            'status' => session('status'),
+        ]);
+    }
+
     public function updateProfile(Request $request)
     {
         \Log::info('UpdateProfile called', [
