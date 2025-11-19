@@ -81,7 +81,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
 Route::prefix('admin')->name('admin.')->middleware(['auth','verified','admin'])->group(function () {
     Route::resource('reservations', ReservationController::class);
     Route::resource('tables', RestaurantTableController::class);
-    Route::resource('contacts', ContactController::class)->only(['index']);
+    Route::resource('contacts', ContactController::class)->only(['index', 'show']);
+    Route::patch('contacts/{contact}/archive', [ContactController::class, 'archive'])->name('contacts.archive');
     Route::get('/profile/edit', [UserController::class, 'adminEditProfile'])->name('profile.edit');
 });
 

@@ -12,10 +12,12 @@ class Contact extends Model
         'subject',
         'message',
         'ip_address',
+        'archived',
     ];
 
     protected $casts = [
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
+        'archived' => 'boolean',
     ];
 }
