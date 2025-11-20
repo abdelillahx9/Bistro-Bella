@@ -18,6 +18,7 @@ class PublicController extends Controller
             ->get();
 
         $featuredReviews = \App\Models\Review::where('is_featured', true)
+            ->where('is_hidden', false)
             ->with('user')
             ->limit(3)
             ->get();

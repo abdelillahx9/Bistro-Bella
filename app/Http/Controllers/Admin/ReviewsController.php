@@ -57,4 +57,11 @@ class ReviewsController extends Controller
 
         return back();
     }
+
+    public function toggleHidden(Review $review)
+    {
+        $review->update(['is_hidden' => !$review->is_hidden]);
+
+        return back();
+    }
 }

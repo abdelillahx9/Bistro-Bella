@@ -90,6 +90,7 @@ Route::prefix('admin')->name('admin.')->middleware(['auth','verified','admin'])-
     Route::get('reviews', [ReviewsController::class, 'index'])->name('reviews.index');
     Route::delete('reviews/{review}', [ReviewsController::class, 'destroy'])->name('reviews.destroy');
     Route::patch('reviews/{review}/toggle-featured', [ReviewsController::class, 'toggleFeatured'])->name('reviews.toggle-featured');
+    Route::patch('reviews/{review}/toggle-hidden', [ReviewsController::class, 'toggleHidden'])->name('reviews.toggle-hidden');
 });
 
 // load menu routes

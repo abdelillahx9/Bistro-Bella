@@ -42,6 +42,15 @@ export default function ReviewsIndex({ reviews, filters }) {
         });
     };
 
+    const toggleHidden = (reviewId) => {
+        router.patch(route('admin.reviews.toggle-hidden', reviewId), {}, {
+            preserveScroll: true,
+            onSuccess: () => {
+                // Optionally refresh the page or update state
+            }
+        });
+    };
+
     const renderStars = (rating) => {
         return [1, 2, 3, 4, 5].map((star) => (
             <svg
@@ -175,6 +184,7 @@ export default function ReviewsIndex({ reviews, filters }) {
                             <th className="px-6 py-3 text-left font-medium font-sans text-[14px] text-black uppercase tracking-wider">Rating</th>
                             <th className="px-6 py-3 text-left font-medium font-sans text-[14px] text-black uppercase tracking-wider">Review</th>
                             <th className="px-6 py-3 text-left font-medium font-sans text-[14px] text-black uppercase tracking-wider">Featured</th>
+                            <th className="px-6 py-3 text-left font-medium font-sans text-[14px] text-black uppercase tracking-wider">Hidden</th>
                             <th className="px-6 py-3 text-left font-medium font-sans text-[14px] text-black uppercase tracking-wider">Date</th>
                             <th className="px-6 py-3 text-center font-medium font-sans text-[14px] text-black uppercase tracking-wider">Actions</th>
                         </tr>
@@ -182,7 +192,7 @@ export default function ReviewsIndex({ reviews, filters }) {
                     <tbody className="bg-white divide-y divide-gray-200 text-[14px] font-normal font-sans text-gray-900">
                         {reviews.data.length === 0 ? (
                             <tr>
-                                <td colSpan="6" className="px-6 py-4 text-center text-gray-500">
+                                <td colSpan="7" className="px-6 py-4 text-center text-gray-500">
                                     No reviews found.
                                 </td>
                             </tr>
@@ -223,6 +233,19 @@ export default function ReviewsIndex({ reviews, filters }) {
                                             title={review.is_featured ? 'Click to unfeature' : 'Click to feature'}
                                         >
                                             {review.is_featured ? 'Featured' : 'Not Featured'}
+                                        </button>
+                                    </td>
+                                    <td className="px-6 py-4 whitespace-nowrap">
+                                        <button
+                                            onClick={() => toggleHidden(review.id)}
+                                            className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full transition-colors duration-200 ${
+                                                review.is_hidden
+                                                    ? 'bg-red-100 text-red-800 hover:bg-red-200'
+                                                    : 'bg-gray-100 text-gray-800 hover:bg-gray-200'
+                                            }`}
+                                            title={review.is_hidden ? 'Click to show' : 'Click to hide'}
+                                        >
+                                            {review.is_hidden ? 'Hidden' : 'Visible'}
                                         </button>
                                     </td>
                                     <td className="px-6 py-4 whitespace-nowrap text-[14px] font-normal font-sans text-gray-500">

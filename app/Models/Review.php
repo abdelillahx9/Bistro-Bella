@@ -14,11 +14,13 @@ class Review extends Model
         'rating',
         'comment',
         'is_featured',
+        'is_hidden',
     ];
 
     protected $casts = [
         'rating' => 'integer',
         'is_featured' => 'boolean',
+        'is_hidden' => 'boolean',
     ];
 
     public function user()

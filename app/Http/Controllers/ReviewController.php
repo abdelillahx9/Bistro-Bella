@@ -12,19 +12,24 @@ class ReviewController extends Controller
     public function index()
     {
         // Get all reviews with user information
+        // Show non-hidden reviews OR hidden reviews that belong to the current user
         $reviews = Review::with(['user'])
+            ->where(function ($query) {
+                $query->where('is_hidden', false)
+                      ->orWhere('user_id', Auth::id());
+            })
             ->orderBy('is_featured', 'desc') // Featured reviews first
             ->orderBy('created_at', 'desc')
             ->paginate(10);
 
-        // Calculate overall statistics
-        $totalReviews = Review::count();
-        $averageRating = Review::avg('rating') ?? 0;
+        // Calculate overall statistics (excluding hidden reviews)
+        $totalReviews = Review::where('is_hidden', false)->count();
+        $averageRating = Review::where('is_hidden', false)->avg('rating') ?? 0;
 
-        // Get rating distribution
+        // Get rating distribution (excluding hidden reviews)
         $ratingDistribution = [];
         for ($i = 1; $i <= 5; $i++) {
-            $ratingDistribution[$i] = Review::where('rating', $i)->count();
+            $ratingDistribution[$i] = Review::where('rating', $i)->where('is_hidden', false)->count();
         }
 
         return Inertia::render('User/Reviews', [
