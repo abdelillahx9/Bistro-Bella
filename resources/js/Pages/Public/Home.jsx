@@ -1,7 +1,7 @@
 import PublicLayout from '@/Layouts/PublicLayout';
 import { Head, Link } from '@inertiajs/react';
 
-export default function Home() {
+export default function Home({ featuredDishes = [] }) {
     return (
         <PublicLayout>
             <Head title="Home - Bistro Bella" />
@@ -51,53 +51,41 @@ export default function Home() {
                         Featured Dishes
                     </h2>
 
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                        {/* Dish 1 */}
-                        <div className="bg-white rounded-lg shadow-lg overflow-hidden">
-                            <img
-                                src="/assets/dish3.png"
-                                alt="Truffle Risotto"
-                                className="w-fill h-fill object-cover"
-                            />
-                            <div className="p-6">
-                                <h3 className="text-xl font-semibold text-gray-800 mb-3">Pasta Primavera</h3>
-                                <p className="text-gray-600 leading-relaxed">
-                                    Fresh pasta with seasonal vegetables and a light cream sauce.
-                                </p>
-                            </div>
+                    {featuredDishes.length > 0 ? (
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                            {featuredDishes.map((dish) => (
+                                <div key={dish.id} className="bg-white rounded-lg shadow-lg overflow-hidden">
+                                    <img
+                                        src={dish.image_path || "/assets/dish1.png"}
+                                        alt={dish.name}
+                                        className="w-full h-48 object-cover"
+                                    />
+                                    <div className="p-6">
+                                        <h3 className="text-xl font-semibold text-gray-800 mb-3">{dish.name}</h3>
+                                        <p className="text-gray-600 leading-relaxed mb-4">
+                                            {dish.description || "A delicious dish from our menu."}
+                                        </p>
+                                        <div className="flex justify-between items-center">
+                                            <span className="text-lg font-bold text-orange-600">${dish.price}</span>
+                                            {dish.category && (
+                                                <span className="text-sm text-gray-500">{dish.category.name}</span>
+                                            )}
+                                        </div>
+                                    </div>
+                                </div>
+                            ))}
                         </div>
-
-                        {/* Dish 2 */}
-                        <div className="bg-white rounded-lg shadow-lg overflow-hidden">
-                            <img
-                                src="/assets/dish2.png"
-                                alt="Beef Tenderloin"
-                                className="w-fill h-fill object-cover"
-                            />
-                            <div className="p-6">
-                                <h3 className="text-xl font-semibold text-gray-800 mb-3">Grilled Salmon</h3>
-                                <p className="text-gray-600 leading-relaxed">
-                                    Perfectly grilled salmon with a side of roasted vegetables.
-                                </p>
-                            </div>
+                    ) : (
+                        <div className="text-center py-12">
+                            <p className="text-gray-500 text-lg">No featured dishes available at the moment.</p>
+                            <Link
+                                href="/menu"
+                                className="inline-block mt-4 bg-orange-600 hover:bg-orange-700 text-white px-6 py-3 rounded-lg transition-colors duration-200"
+                            >
+                                View Full Menu
+                            </Link>
                         </div>
-                        {/* Dish 3 */}
-                        <div className="bg-white rounded-lg shadow-lg overflow-hidden">
-                            <img
-                                src="/assets/dish1.png"
-                                alt="Grilled Salmon"
-                                className="w-fill h-fill object-cover"
-                            />
-                            <div className="p-6">
-                                <h3 className="text-xl font-semibold text-gray-800 mb-3">Chocolate Lava Cake</h3>
-                                <p className="text-gray-600 leading-relaxed">
-                                    Warm chocolate cake with a gooey center and a tangy raspberry sauce.
-                                </p>
-                            </div>
-                        </div>
-
-
-                    </div>
+                    )}
                 </div>
             </section>
 

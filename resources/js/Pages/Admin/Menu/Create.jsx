@@ -14,6 +14,7 @@ export default function MenuCreate({ categories }) {
         is_vegetarian: false,
         is_gluten_free: false,
         is_available: true,
+        is_featured: false,
     });
 
     const [preview, setPreview] = useState(null);
@@ -224,6 +225,19 @@ export default function MenuCreate({ categories }) {
 
                         {/* Checkboxes */}
                         <div className="space-y-3">
+                            <div className="flex items-center">
+                                <input
+                                    id="is_featured"
+                                    type="checkbox"
+                                    checked={data.is_featured}
+                                    onChange={(e) => setData('is_featured', e.target.checked)}
+                                    className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                                />
+                                <label htmlFor="is_featured" className="ml-2 block text-sm font-medium text-gray-700">
+                                    Featured Dish
+                                </label>
+                            </div>
+
                             <div className="flex items-center">
                                 <input
                                     id="is_vegetarian"

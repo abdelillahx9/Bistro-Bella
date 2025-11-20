@@ -11,7 +11,15 @@ class PublicController extends Controller
 {
     public function home()
     {
-        return Inertia::render('Public/Home');
+        $featuredDishes = \App\Models\Menu::where('is_featured', true)
+            ->where('is_available', true)
+            ->with('category')
+            ->limit(3)
+            ->get();
+
+        return Inertia::render('Public/Home', [
+            'featuredDishes' => $featuredDishes
+        ]);
     }
 
     public function menu()

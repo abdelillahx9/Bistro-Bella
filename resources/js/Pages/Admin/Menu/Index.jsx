@@ -160,6 +160,7 @@ export default function MenusIndex({ menus, categories, filters }) {
                             <th className="px-6 py-3 text-left font-medium font-sans text-[14px] text-black uppercase tracking-wider">Name</th>
                             <th className="px-6 py-3 text-left font-medium font-sans text-[14px] text-black uppercase tracking-wider">Category</th>
                             <th className="px-6 py-3 text-left font-medium font-sans text-[14px] text-black uppercase tracking-wider">Price</th>
+                            <th className="px-6 py-3 text-left font-medium font-sans text-[14px] text-black uppercase tracking-wider">Featured</th>
                             <th className="px-6 py-3 text-left font-medium font-sans text-[14px] text-black uppercase tracking-wider">Availability</th>
                             <th className="px-6 py-3 text-center font-medium font-sans text-[14px] text-black uppercase tracking-wider">Actions</th>
                         </tr>
@@ -167,7 +168,7 @@ export default function MenusIndex({ menus, categories, filters }) {
                     <tbody className="bg-white divide-y divide-gray-200 text-[14px] font-normal font-sans text-gray-900">
                         {menus.data.length === 0 ? (
                             <tr>
-                                <td colSpan="7" className="px-6 py-4 text-center text-gray-500">
+                                <td colSpan="8" className="px-6 py-4 text-center text-gray-500">
                                     No menus found. <Link href={route('admin.menu.create')} className="text-blue-600 hover:underline">Create your first menu</Link>
                                 </td>
                             </tr>
@@ -191,6 +192,24 @@ export default function MenusIndex({ menus, categories, filters }) {
                                     </td>
                                     <td className="px-6 py-4 whitespace-nowrap text-[14px] font-normal font-sans text-gray-500">{m.category?.name}</td>
                                     <td className="px-6 py-4 whitespace-nowrap text-[14px] font-normal font-sans text-gray-500">${m.price}</td>
+                                    <td className="px-6 py-4 whitespace-nowrap">
+                                        <button
+                                            onClick={() => router.patch(route('admin.menu.toggle-featured', m.id), {}, {
+                                                preserveScroll: true,
+                                                onSuccess: () => {
+                                                    // Optionally refresh the page or update state
+                                                }
+                                            })}
+                                            className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full transition-colors duration-200 ${
+                                                m.is_featured
+                                                    ? 'bg-yellow-100 text-yellow-800 hover:bg-yellow-200'
+                                                    : 'bg-gray-100 text-gray-800 hover:bg-gray-200'
+                                            }`}
+                                            title={m.is_featured ? 'Click to unfeature' : 'Click to feature'}
+                                        >
+                                            {m.is_featured ? 'Featured' : 'Not Featured'}
+                                        </button>
+                                    </td>
                                     <td className="px-6 py-4 whitespace-nowrap">
                                         <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${m.is_available
                                             ? 'bg-green-100 text-green-800'

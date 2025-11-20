@@ -33,6 +33,7 @@ Route::prefix('admin')->name('admin.')->middleware(['auth','verified','admin'])-
     Route::get('menu/{menu}/edit', [MenuController::class, 'edit'])->name('menu.edit');
     Route::put('menu/{menu}', [MenuController::class, 'update'])->name('menu.update');
     Route::delete('menu/{menu}', [MenuController::class, 'destroy'])->name('menu.destroy');
+    Route::patch('menu/{menu}/toggle-featured', [MenuController::class, 'toggleFeatured'])->name('menu.toggle-featured');
 
     // Menu reviews
     Route::get('menu/reviews', [MenuReviewsController::class, 'index'])->name('menu.reviews.index');

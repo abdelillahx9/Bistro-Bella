@@ -65,6 +65,7 @@ class MenuController extends Controller
             'is_vegetarian' => 'sometimes|boolean',
             'is_gluten_free' => 'sometimes|boolean',
             'is_available' => 'sometimes|boolean',
+            'is_featured' => 'sometimes|boolean',
         ]);
 
         if (empty($data['slug'])) {
@@ -114,6 +115,7 @@ class MenuController extends Controller
             'is_vegetarian' => 'sometimes|boolean',
             'is_gluten_free' => 'sometimes|boolean',
             'is_available' => 'sometimes|boolean',
+            'is_featured' => 'sometimes|boolean',
         ]);
 
         if (empty($data['slug'])) {
@@ -149,5 +151,15 @@ class MenuController extends Controller
         $menu->delete();
 
         return redirect()->route('admin.menu.index');
+    }
+
+    /**
+     * Toggle the featured status of a menu item.
+     */
+    public function toggleFeatured(Menu $menu)
+    {
+        $menu->update(['is_featured' => !$menu->is_featured]);
+
+        return back();
     }
 }

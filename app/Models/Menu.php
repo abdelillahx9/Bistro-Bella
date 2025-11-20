@@ -19,6 +19,14 @@ class Menu extends Model
         'is_vegetarian',
         'is_gluten_free',
         'is_available',
+        'is_featured',
+    ];
+
+    protected $casts = [
+        'is_featured' => 'boolean',
+        'is_vegetarian' => 'boolean',
+        'is_gluten_free' => 'boolean',
+        'is_available' => 'boolean',
     ];
 
     public function category()
