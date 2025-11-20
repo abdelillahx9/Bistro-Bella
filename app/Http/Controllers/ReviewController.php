@@ -34,6 +34,9 @@ class ReviewController extends Controller
                 'averageRating' => round($averageRating, 1),
                 'ratingDistribution' => $ratingDistribution,
             ],
+            'auth' => [
+                'user' => Auth::user(),
+            ],
         ]);
     }
 
@@ -48,7 +51,13 @@ class ReviewController extends Controller
         $existingReview = Review::where('user_id', Auth::id())->first();
 
         if ($existingReview) {
-            return back()->withErrors(['rating' => 'You have already reviewed this restaurant.']);
+            // Update existing review
+            $existingReview->update([
+                'rating' => $request->rating,
+                'comment' => $request->comment,
+            ]);
+
+            return back()->with('success', 'Your review has been updated successfully!');
         }
 
         Review::create([
