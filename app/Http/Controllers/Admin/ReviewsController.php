@@ -1,29 +1,21 @@
 <?php
 
-namespace App\Http\Controllers\Admin\Menu;
+namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\MenuReview;
-use App\Models\Menu;
+use App\Models\Review;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
-class MenuReviewsController extends Controller
+class ReviewsController extends Controller
 {
     public function index(Request $request)
     {
-        $query = MenuReview::with(['menu', 'user']);
+        $query = Review::with(['user']);
 
         // Search by comment
         if ($search = $request->input('search')) {
             $query->where('comment', 'like', "%{$search}%");
-        }
-
-        // Filter by menu name
-        if ($menuName = $request->input('menu')) {
-            $query->whereHas('menu', function($q) use ($menuName) {
-                $q->where('name', 'like', "%{$menuName}%");
-            });
         }
 
         // Filter by user name
@@ -46,19 +38,23 @@ class MenuReviewsController extends Controller
 
         $reviews = $query->paginate(15)->withQueryString();
 
-        $menus = Menu::orderBy('name')->get();
-
-        return Inertia::render('Admin/Menu/Reviews/Index', [
+        return Inertia::render('Admin/Reviews/Index', [
             'reviews' => $reviews,
-            'menus' => $menus,
-            'filters' => $request->only(['search', 'menu', 'user', 'rating_sort']),
+            'filters' => $request->only(['search', 'user', 'rating_sort']),
         ]);
     }
 
-    public function destroy(MenuReview $review)
+    public function destroy(Review $review)
     {
         $review->delete();
 
-        return redirect()->route('admin.menu.reviews.index');
+        return redirect()->route('admin.reviews.index');
+    }
+
+    public function toggleFeatured(Review $review)
+    {
+        $review->update(['is_featured' => !$review->is_featured]);
+
+        return back();
     }
 }

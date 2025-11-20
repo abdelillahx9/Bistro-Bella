@@ -9,6 +9,7 @@ use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\ReservationController;
 use App\Http\Controllers\Admin\RestaurantTableController;
 use App\Http\Controllers\Admin\ContactController;
+use App\Http\Controllers\Admin\ReviewsController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
@@ -84,6 +85,11 @@ Route::prefix('admin')->name('admin.')->middleware(['auth','verified','admin'])-
     Route::resource('contacts', ContactController::class)->only(['index', 'show']);
     Route::patch('contacts/{contact}/archive', [ContactController::class, 'archive'])->name('contacts.archive');
     Route::get('/profile/edit', [UserController::class, 'adminEditProfile'])->name('profile.edit');
+
+    // Reviews management
+    Route::get('reviews', [ReviewsController::class, 'index'])->name('reviews.index');
+    Route::delete('reviews/{review}', [ReviewsController::class, 'destroy'])->name('reviews.destroy');
+    Route::patch('reviews/{review}/toggle-featured', [ReviewsController::class, 'toggleFeatured'])->name('reviews.toggle-featured');
 });
 
 // load menu routes

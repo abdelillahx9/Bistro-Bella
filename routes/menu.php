@@ -4,9 +4,6 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\Menu\MenuController;
 use App\Http\Controllers\Admin\Menu\MenuCategoriesController;
 use App\Http\Controllers\Admin\Menu\MenuReviewsController;
-use App\Http\Controllers\Admin\Menu\MenuCommentsController;
-use App\Http\Controllers\Admin\Menu\MenuFavoritesController;
-use App\Http\Controllers\Admin\Menu\TagController;
 
 // Group all admin routes
 Route::prefix('admin')->name('admin.')->middleware(['auth','verified','admin'])->group(function () {
@@ -34,10 +31,6 @@ Route::prefix('admin')->name('admin.')->middleware(['auth','verified','admin'])-
     Route::put('menu/{menu}', [MenuController::class, 'update'])->name('menu.update');
     Route::delete('menu/{menu}', [MenuController::class, 'destroy'])->name('menu.destroy');
     Route::patch('menu/{menu}/toggle-featured', [MenuController::class, 'toggleFeatured'])->name('menu.toggle-featured');
-
-    // Menu reviews
-    Route::get('menu/reviews', [MenuReviewsController::class, 'index'])->name('menu.reviews.index');
-    Route::delete('menu/reviews/{review}', [MenuReviewsController::class, 'destroy'])->name('menu.reviews.destroy');
 
     // Menu comments and favorites admin management
     Route::get('menu/comments', [MenuCommentsController::class, 'index'])->name('menu.comments.index');

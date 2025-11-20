@@ -8,7 +8,7 @@ use Inertia\Inertia;
 use Inertia\Response;
 use App\Models\Reservation;
 use App\Models\RestaurantTable;
-use App\Models\MenuReview;
+use App\Models\Review;
 
 class DashboardController extends Controller
 {
@@ -23,7 +23,7 @@ class DashboardController extends Controller
 
         $totalActiveTables = RestaurantTable::where('is_active', true)->count();
 
-        $totalReviews = MenuReview::count();
+        $totalReviews = Review::count();
 
         $upcomingReservations = Reservation::with('user')
             ->where('reservation_date', today())

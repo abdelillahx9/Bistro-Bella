@@ -1,7 +1,7 @@
 import PublicLayout from '@/Layouts/PublicLayout';
 import { Head, Link } from '@inertiajs/react';
 
-export default function Home({ featuredDishes = [] }) {
+export default function Home({ featuredDishes = [], featuredReviews = [] }) {
     return (
         <PublicLayout>
             <Head title="Home - Bistro Bella" />
@@ -96,102 +96,53 @@ export default function Home({ featuredDishes = [] }) {
                     </h2>
 
                     <div className="space-y-8 max-w-4xl mx-auto">
-                        {/* Review 1 */}
-                        <div className="flex items-start space-x-4">
-                            <img
-                                src="/assets/profile.png"
-                                alt="Sarah Johnson"
-                                className="w-16 h-16 rounded-full object-cover flex-shrink-0"
-                            />
-                            <div className="flex-1">
-                                <h3 className="text-lg font-semibold text-gray-800 mb-1">Sarah Johnson</h3>
-                                <p className="text-sm text-gray-500 mb-3">December 15, 2024</p>
+                        {featuredReviews && featuredReviews.length > 0 ? (
+                            featuredReviews.map((review, index) => (
+                                <div key={review.id} className="flex items-start space-x-4">
+                                    <img
+                                        src="/assets/profile.png"
+                                        alt={review.user.name}
+                                        className="w-16 h-16 rounded-full object-cover flex-shrink-0"
+                                    />
+                                    <div className="flex-1">
+                                        <div className="flex items-center gap-2 mb-1">
+                                            <h3 className="text-lg font-semibold text-gray-800">{review.user.name}</h3>
+                                            <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">
+                                                Featured
+                                            </span>
+                                        </div>
+                                        <p className="text-sm text-gray-500 mb-3">
+                                            {new Date(review.created_at).toLocaleDateString('en-US', {
+                                                year: 'numeric',
+                                                month: 'long',
+                                                day: 'numeric'
+                                            })}
+                                        </p>
 
-                                {/* 5 Stars */}
-                                <div className="flex mb-3">
-                                    <svg className="w-5 h-5 text-yellow-400 fill-current" viewBox="0 0 20 20">
-                                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                                    </svg>
-                                    <svg className="w-5 h-5 text-yellow-400 fill-current" viewBox="0 0 20 20">
-                                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                                    </svg>
-                                    <svg className="w-5 h-5 text-yellow-400 fill-current" viewBox="0 0 20 20">
-                                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                                    </svg>
-                                    <svg className="w-5 h-5 text-yellow-400 fill-current" viewBox="0 0 20 20">
-                                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                                    </svg>
+                                        {/* Stars */}
+                                        <div className="flex mb-3">
+                                            {[...Array(5)].map((_, starIndex) => (
+                                                <svg
+                                                    key={starIndex}
+                                                    className={`w-5 h-5 ${starIndex < review.rating ? 'text-yellow-400' : 'text-gray-300'} fill-current`}
+                                                    viewBox="0 0 20 20"
+                                                >
+                                                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                                                </svg>
+                                            ))}
+                                        </div>
+
+                                        <p className="text-gray-600 leading-relaxed">
+                                            "{review.comment}"
+                                        </p>
+                                    </div>
                                 </div>
-
-                                <p className="text-gray-600 leading-relaxed">
-                                    "Bistro Bella exceeded all my expectations! The food was exquisite, the service impeccable, and the ambiance was perfect for a romantic evening. I highly recommend the Pasta Primavera!"                                </p>
+                            ))
+                        ) : (
+                            <div className="text-center py-8">
+                                <p className="text-gray-500">No featured reviews yet. Be the first to leave a review!</p>
                             </div>
-                        </div>
-
-                        {/* Review 2 */}
-                        <div className="flex items-start space-x-4">
-                            <img
-                                src="/assets/profile.png"
-                                alt="Michael Chen"
-                                className="w-16 h-16 rounded-full object-cover flex-shrink-0"
-                            />
-                            <div className="flex-1">
-                                <h3 className="text-lg font-semibold text-gray-800 mb-1">Michael Chen</h3>
-                                <p className="text-sm text-gray-500 mb-3">November 28, 2024</p>
-
-                                {/* 5 Stars */}
-                                <div className="flex mb-3">
-                                    <svg className="w-5 h-5 text-yellow-400 fill-current" viewBox="0 0 20 20">
-                                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                                    </svg>
-                                    <svg className="w-5 h-5 text-yellow-400 fill-current" viewBox="0 0 20 20">
-                                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                                    </svg>
-                                    <svg className="w-5 h-5 text-yellow-400 fill-current" viewBox="0 0 20 20">
-                                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                                    </svg>
-                                    <svg className="w-5 h-5 text-yellow-400 fill-current" viewBox="0 0 20 20">
-                                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                                    </svg>
-                                </div>
-
-                                <p className="text-gray-600 leading-relaxed">
-                                    "The ambiance is perfect for special occasions. I had a wonderful experience at Bistro Bella. The Grilled Salmon was cooked to perfection, and the staff was very attentive. The only reason I didn't give it 5 stars is because the dessert menu could use a bit more variety."
-                                </p>
-                            </div>
-                        </div>
-
-                        {/* Review 3 */}
-                        <div className="flex items-start space-x-4">
-                            <img
-                                src="/assets/profile.png"
-                                alt="Emma Rodriguez"
-                                className="w-16 h-16 rounded-full object-cover flex-shrink-0"
-                            />
-                            <div className="flex-1">
-                                <h3 className="text-lg font-semibold text-gray-800 mb-1">Emma Rodriguez</h3>
-                                <p className="text-sm text-gray-500 mb-3">October 10, 2024</p>
-
-                                {/* 5 Stars */}
-                                <div className="flex mb-3">
-                                    <svg className="w-5 h-5 text-yellow-400 fill-current" viewBox="0 0 20 20">
-                                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                                    </svg>
-                                    <svg className="w-5 h-5 text-yellow-400 fill-current" viewBox="0 0 20 20">
-                                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                                    </svg>
-                                    <svg className="w-5 h-5 text-yellow-400 fill-current" viewBox="0 0 20 20">
-                                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                                    </svg>
-                                    <svg className="w-5 h-5 text-yellow-400 fill-current" viewBox="0 0 20 20">
-                                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                                    </svg>
-                                </div>
-
-                                <p className="text-gray-600 leading-relaxed">
-                                    "From the moment we walked in, we felt welcomed and pampered. The Chocolate Lava Cake was the perfect ending to a delicious meal. Bistro Bella is a true gem!"                                </p>
-                            </div>
-                        </div>
+                        )}
                     </div>
                 </div>
             </section>

@@ -46,13 +46,6 @@ export default function AuthenticatedLayout({ header, children }) {
                         Tags
                     </NavLink>
                     <NavLink
-                        href={route('admin.menu.reviews.index')}
-                        active={route().current('admin.menu.reviews.index')}
-                        className="flex w-full items-center px-4 py-2 text-left text-sm font-medium"
-                    >
-                        reviews
-                    </NavLink>
-                    <NavLink
                         href={route('admin.reservations.index')}
                         active={route().current('admin.reservations.index')}
                         className="flex w-full items-center px-4 py-2 text-left text-sm font-medium"
@@ -72,6 +65,13 @@ export default function AuthenticatedLayout({ header, children }) {
                         className="flex w-full items-center px-4 py-2 text-left text-sm font-medium"
                     >
                         Contact Messages
+                    </NavLink>
+                    <NavLink
+                        href={route('admin.reviews.index')}
+                        active={route().current('admin.reviews.index')}
+                        className="flex w-full items-center px-4 py-2 text-left text-sm font-medium"
+                    >
+                        Reviews
                     </NavLink>
 
                     {/* Add more NavLinks here as needed */}

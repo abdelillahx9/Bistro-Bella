@@ -2,8 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Menu;
-use App\Models\MenuReview;
+use App\Models\Review;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
@@ -12,19 +11,20 @@ class ReviewController extends Controller
 {
     public function index()
     {
-        // Get all reviews with user and menu information
-        $reviews = MenuReview::with(['user', 'menu'])
+        // Get all reviews with user information
+        $reviews = Review::with(['user'])
+            ->orderBy('is_featured', 'desc') // Featured reviews first
             ->orderBy('created_at', 'desc')
             ->paginate(10);
 
         // Calculate overall statistics
-        $totalReviews = MenuReview::count();
-        $averageRating = MenuReview::avg('rating') ?? 0;
+        $totalReviews = Review::count();
+        $averageRating = Review::avg('rating') ?? 0;
 
         // Get rating distribution
         $ratingDistribution = [];
         for ($i = 1; $i <= 5; $i++) {
-            $ratingDistribution[$i] = MenuReview::where('rating', $i)->count();
+            $ratingDistribution[$i] = Review::where('rating', $i)->count();
         }
 
         return Inertia::render('User/Reviews', [
@@ -34,29 +34,24 @@ class ReviewController extends Controller
                 'averageRating' => round($averageRating, 1),
                 'ratingDistribution' => $ratingDistribution,
             ],
-            'menus' => Menu::select('id', 'name')->get(),
         ]);
     }
 
     public function store(Request $request)
     {
         $request->validate([
-            'menu_id' => 'required|exists:menus,id',
             'rating' => 'required|integer|min:1|max:5',
             'comment' => 'nullable|string|max:1000',
         ]);
 
-        // Check if user already reviewed this menu
-        $existingReview = MenuReview::where('user_id', Auth::id())
-            ->where('menu_id', $request->menu_id)
-            ->first();
+        // Check if user already reviewed the restaurant
+        $existingReview = Review::where('user_id', Auth::id())->first();
 
         if ($existingReview) {
-            return back()->withErrors(['menu_id' => 'You have already reviewed this menu item.']);
+            return back()->withErrors(['rating' => 'You have already reviewed this restaurant.']);
         }
 
-        MenuReview::create([
-            'menu_id' => $request->menu_id,
+        Review::create([
             'user_id' => Auth::id(),
             'rating' => $request->rating,
             'comment' => $request->comment,
@@ -65,7 +60,7 @@ class ReviewController extends Controller
         return back()->with('success', 'Your review has been submitted successfully!');
     }
 
-    public function update(Request $request, MenuReview $review)
+    public function update(Request $request, Review $review)
     {
         // Ensure user can only update their own reviews
         if ($review->user_id !== Auth::id()) {
@@ -85,7 +80,7 @@ class ReviewController extends Controller
         return back()->with('success', 'Your review has been updated successfully!');
     }
 
-    public function destroy(MenuReview $review)
+    public function destroy(Review $review)
     {
         // Ensure user can only delete their own reviews
         if ($review->user_id !== Auth::id()) {

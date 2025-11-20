@@ -17,8 +17,14 @@ class PublicController extends Controller
             ->limit(3)
             ->get();
 
+        $featuredReviews = \App\Models\Review::where('is_featured', true)
+            ->with('user')
+            ->limit(3)
+            ->get();
+
         return Inertia::render('Public/Home', [
-            'featuredDishes' => $featuredDishes
+            'featuredDishes' => $featuredDishes,
+            'featuredReviews' => $featuredReviews,
         ]);
     }
 
