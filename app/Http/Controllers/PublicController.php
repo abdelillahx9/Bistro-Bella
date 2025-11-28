@@ -88,7 +88,7 @@ class PublicController extends Controller
             'name' => 'required|string|max:255',
             'email' => 'required_without:phone|nullable|email|max:255',
             'phone' => 'required_without:email|nullable|string|max:20',
-            'reservation_date' => 'required|date|after:today',
+            'reservation_date' => 'required|date|after_or_equal:today',
             'reservation_time' => 'required|date_format:H:i',
             'guest_count' => 'required|integer|min:1|max:20',
             'special_requests' => 'nullable|string|max:1000',

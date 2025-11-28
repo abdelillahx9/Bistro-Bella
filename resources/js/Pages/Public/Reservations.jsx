@@ -1,11 +1,13 @@
 import PublicLayout from '@/Layouts/PublicLayout';
 import { Head, useForm } from '@inertiajs/react';
 import { useState } from 'react';
+import { Calendar } from 'primereact/calendar';
 
 export default function Reservations({ userData }) {
     const [showNotification, setShowNotification] = useState(false);
     const [notificationMessage, setNotificationMessage] = useState('');
     const [notificationType, setNotificationType] = useState('success');
+    const [selectedDate, setSelectedDate] = useState(null);
 
     const { data, setData, post, processing, errors, reset } = useForm({
         name: userData?.name || '',
@@ -26,6 +28,7 @@ export default function Reservations({ userData }) {
                 setNotificationType('success');
                 setShowNotification(true);
                 reset();
+                setSelectedDate(null);
 
                 // Hide notification after 5 seconds
                 setTimeout(() => {
@@ -170,13 +173,30 @@ export default function Reservations({ userData }) {
                                     <label htmlFor="reservation_date" className="block text-sm font-medium text-gray-700 mb-2">
                                         Reservation Date *
                                     </label>
-                                    <input
-                                        type="date"
+                                    <Calendar
                                         id="reservation_date"
-                                        value={data.reservation_date}
-                                        onChange={e => setData('reservation_date', e.target.value)}
-                                        min={new Date().toISOString().split('T')[0]}
-                                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-colors duration-200 bg-white"
+                                        value={selectedDate}
+                                        onChange={(e) => {
+                                            setSelectedDate(e.value);
+                                            if (e.value) {
+                                                const year = e.value.getFullYear();
+                                                const month = String(e.value.getMonth() + 1).padStart(2, '0');
+                                                const day = String(e.value.getDate()).padStart(2, '0');
+                                                setData('reservation_date', `${year}-${month}-${day}`);
+                                            } else {
+                                                setData('reservation_date', '');
+                                            }
+                                        }}
+                                        minDate={(() => {
+                                            const today = new Date();
+                                            today.setHours(0, 0, 0, 0);
+                                            return today;
+                                        })()}
+                                        dateFormat="yy-mm-dd"
+                                        className="w-full"
+                                        inputClassName="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-colors duration-200 bg-white"
+                                        placeholder="Select reservation date"
+                                        inline
                                         required
                                     />
                                     {errors.reservation_date && <p className="mt-1 text-sm text-red-600">{errors.reservation_date}</p>}

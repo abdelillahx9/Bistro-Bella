@@ -197,7 +197,7 @@ class UserController extends Controller
         }
 
         $request->validate([
-            'reservation_date' => 'required|date|after:today',
+            'reservation_date' => 'required|date|after_or_equal:today',
             'reservation_time' => 'required|date_format:H:i',
             'guest_count' => 'required|integer|min:1|max:20',
             'special_requests' => 'nullable|string|max:1000',
