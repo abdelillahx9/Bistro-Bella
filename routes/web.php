@@ -83,6 +83,7 @@ Route::prefix('admin')->name('admin.')->middleware(['auth','verified','admin'])-
     Route::resource('reservations', ReservationController::class);
     Route::resource('tables', RestaurantTableController::class);
     Route::resource('contacts', ContactController::class)->only(['index', 'show']);
+    Route::resource('staff', \App\Http\Controllers\Admin\StaffController::class);
     Route::patch('contacts/{contact}/archive', [ContactController::class, 'archive'])->name('contacts.archive');
     Route::get('/profile/edit', [UserController::class, 'adminEditProfile'])->name('profile.edit');
 

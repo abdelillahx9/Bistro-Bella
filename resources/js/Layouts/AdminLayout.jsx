@@ -67,6 +67,13 @@ export default function AuthenticatedLayout({ header, children }) {
                         Contact Messages
                     </NavLink>
                     <NavLink
+                        href={route('admin.staff.index')}
+                        active={route().current('admin.staff.index') || route().current('admin.staff.create') || route().current('admin.staff.edit')}
+                        className="flex w-full items-center px-4 py-2 text-left text-sm font-medium"
+                    >
+                        Staff
+                    </NavLink>
+                    <NavLink
                         href={route('admin.reviews.index')}
                         active={route().current('admin.reviews.index')}
                         className="flex w-full items-center px-4 py-2 text-left text-sm font-medium"
