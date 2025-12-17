@@ -117,7 +117,11 @@ class PublicController extends Controller
 
     public function about()
     {
-        return Inertia::render('Public/About');
+        $team = \App\Models\Staff::where('status', true)->get();
+
+        return Inertia::render('Public/About', [
+            'team' => $team
+        ]);
     }
 
     public function contact()
