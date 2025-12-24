@@ -95,6 +95,10 @@ Route::prefix('admin')->name('admin.')->middleware(['auth','verified','admin'])-
     Route::delete('reviews/{review}', [ReviewsController::class, 'destroy'])->name('reviews.destroy');
     Route::patch('reviews/{review}/toggle-featured', [ReviewsController::class, 'toggleFeatured'])->name('reviews.toggle-featured');
     Route::patch('reviews/{review}/toggle-hidden', [ReviewsController::class, 'toggleHidden'])->name('reviews.toggle-hidden');
+
+    // Blog management
+    Route::resource('blog', \App\Http\Controllers\Admin\BlogController::class);
+    Route::resource('blog-tags', \App\Http\Controllers\Admin\BlogTagController::class, ['as' => 'blog']);
 });
 
 // load menu routes
