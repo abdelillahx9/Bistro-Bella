@@ -81,6 +81,20 @@ export default function AuthenticatedLayout({ header, children }) {
                         Reviews
                     </NavLink>
                     <NavLink
+                        href={route('admin.blog.index')}
+                        active={route().current('admin.blog.index') || route().current('admin.blog.create') || route().current('admin.blog.edit')}
+                        className="flex w-full items-center px-4 py-2 text-left text-sm font-medium"
+                    >
+                        Blog Posts
+                    </NavLink>
+                    <NavLink
+                        href={route('admin.blog-tags.index')}
+                        active={route().current('admin.blog-tags.index') || route().current('admin.blog-tags.create') || route().current('admin.blog-tags.edit')}
+                        className="flex w-full items-center px-4 py-2 text-left text-sm font-medium"
+                    >
+                        Blog Tags
+                    </NavLink>
+                    <NavLink
                         href={route('admin.users.index')}
                         active={route().current('admin.users.index') || route().current('admin.users.create') || route().current('admin.users.edit')}
                         className="flex w-full items-center px-4 py-2 text-left text-sm font-medium"

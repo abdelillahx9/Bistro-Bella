@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\Menu\MenuController;
 use App\Http\Controllers\Admin\Menu\MenuCategoriesController;
 use App\Http\Controllers\Admin\Menu\MenuReviewsController;
+use App\Http\Controllers\Admin\Menu\TagController;
 
 // Group all admin routes
 Route::prefix('admin')->name('admin.')->middleware(['auth','verified','admin'])->group(function () {
