@@ -21,6 +21,7 @@ Route::get('/', [PublicController::class, 'home'])->name('public.home');
 Route::get('/menu', [PublicController::class, 'menu'])->name('public.menu');
 Route::get('/menu/category/{category}', [PublicController::class, 'getCategoryMenu'])->name('public.menu.category');
 Route::get('/blog', [PublicController::class, 'blog'])->name('public.blog');
+Route::get('/blog/{slug}', [PublicController::class, 'showBlogPost'])->name('public.blog.show');
 Route::get('/reservations', [PublicController::class, 'reservations'])->name('public.reservations');
 Route::post('/reservations', [PublicController::class, 'storeReservation'])->name('public.reservations.store');
 Route::get('/reservations/available-tables', [PublicController::class, 'getAvailableTables'])->name('public.reservations.available-tables');
