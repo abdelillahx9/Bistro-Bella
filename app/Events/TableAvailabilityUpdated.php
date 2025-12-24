@@ -48,4 +48,3 @@ class TableAvailabilityUpdated implements ShouldBroadcast
         return 'table.updated';
     }
 }
-}

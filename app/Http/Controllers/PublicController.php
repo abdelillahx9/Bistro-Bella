@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Events\TableAvailabilityUpdated;
+use App\Mail\ReservationConfirmed;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 use Inertia\Inertia;
