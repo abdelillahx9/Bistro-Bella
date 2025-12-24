@@ -108,7 +108,7 @@ export default function Create({ categories, tags }) {
                                         maxLength={500}
                                         required
                                     />
-                                    <p className="mt-1 text-sm text-gray-500">{data.excerpt.length}/500 characters</p>
+                                    <p className="mt-1 text-sm text-gray-500">{(data.excerpt || '').length}/500 characters</p>
                                     {errors.excerpt && <p className="mt-1 text-sm text-red-600">{errors.excerpt}</p>}
                                 </div>
 
@@ -242,7 +242,7 @@ export default function Create({ categories, tags }) {
                                                 className="w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm"
                                                 maxLength={60}
                                             />
-                                            <p className="mt-1 text-sm text-gray-500">{data.seo_title.length}/60 characters</p>
+                                            <p className="mt-1 text-sm text-gray-500">{(data.seo_title || '').length}/60 characters</p>
                                             {errors.seo_title && <p className="mt-1 text-sm text-red-600">{errors.seo_title}</p>}
                                         </div>
 
@@ -257,7 +257,7 @@ export default function Create({ categories, tags }) {
                                                 className="w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm"
                                                 maxLength={160}
                                             />
-                                            <p className="mt-1 text-sm text-gray-500">{data.seo_description.length}/160 characters</p>
+                                            <p className="mt-1 text-sm text-gray-500">{(data.seo_description || '').length}/160 characters</p>
                                             {errors.seo_description && <p className="mt-1 text-sm text-red-600">{errors.seo_description}</p>}
                                         </div>
                                     </div>
