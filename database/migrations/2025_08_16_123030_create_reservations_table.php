@@ -22,7 +22,7 @@ return new class extends Migration
             $table->unsignedInteger('guest_count');
             $table->text('special_requests')->nullable();
             $table->enum('status', ['pending', 'confirmed', 'seated', 'cancelled'])->default('pending');
-            $table->enum('source', ['online', 'phone', 'walk-in'])->default('online');
+            $table->enum('source', ['website', 'phone', 'walk-in'])->default('website');
             $table->timestamps();
         });
     }

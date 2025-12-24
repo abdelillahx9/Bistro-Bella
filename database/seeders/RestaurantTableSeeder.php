@@ -14,21 +14,21 @@ class RestaurantTableSeeder extends Seeder
     public function run(): void
     {
         $tables = [
-            ['table_number' => 'T01', 'capacity' => 2, 'is_active' => true],
-            ['table_number' => 'T02', 'capacity' => 2, 'is_active' => true],
+            ['table_number' => 'T01', 'capacity' => 4, 'is_active' => true],
+            ['table_number' => 'T02', 'capacity' => 4, 'is_active' => true],
             ['table_number' => 'T03', 'capacity' => 4, 'is_active' => true],
             ['table_number' => 'T04', 'capacity' => 4, 'is_active' => true],
             ['table_number' => 'T05', 'capacity' => 4, 'is_active' => true],
-            ['table_number' => 'T06', 'capacity' => 6, 'is_active' => true],
-            ['table_number' => 'T07', 'capacity' => 6, 'is_active' => true],
-            ['table_number' => 'T08', 'capacity' => 8, 'is_active' => true],
-            ['table_number' => 'A01', 'capacity' => 2, 'is_active' => true],
-            ['table_number' => 'A02', 'capacity' => 2, 'is_active' => true],
+            ['table_number' => 'T06', 'capacity' => 4, 'is_active' => true],
+            ['table_number' => 'T07', 'capacity' => 4, 'is_active' => true],
+            ['table_number' => 'T08', 'capacity' => 4, 'is_active' => true],
+            ['table_number' => 'A01', 'capacity' => 4, 'is_active' => true],
+            ['table_number' => 'A02', 'capacity' => 4, 'is_active' => true],
             ['table_number' => 'A03', 'capacity' => 4, 'is_active' => true],
             ['table_number' => 'A04', 'capacity' => 4, 'is_active' => false], // inactive table
-            ['table_number' => 'B01', 'capacity' => 6, 'is_active' => true],
-            ['table_number' => 'B02', 'capacity' => 8, 'is_active' => true],
-            ['table_number' => 'B03', 'capacity' => 10, 'is_active' => true],
+            ['table_number' => 'B01', 'capacity' => 4, 'is_active' => true],
+            ['table_number' => 'B02', 'capacity' => 4, 'is_active' => true],
+            ['table_number' => 'B03', 'capacity' => 4, 'is_active' => true],
         ];
 
         foreach ($tables as $table) {

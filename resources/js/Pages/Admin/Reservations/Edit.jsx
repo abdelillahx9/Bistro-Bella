@@ -2,13 +2,12 @@ import AuthenticatedLayout from '@/Layouts/AdminLayout';
 import { Head, Link, useForm } from '@inertiajs/react';
 import TextField from '@/Components/TextField';
 
-export default function Edit({ reservation, users, statuses, sources }) {
+export default function Edit({ reservation, statuses, sources }) {
     const { data, setData, put, processing, errors } = useForm({
-        user_id: reservation.user_id || '',
         name: reservation.name,
         email: reservation.email || '',
         phone: reservation.phone || '',
-        reservation_date: reservation.reservation_date,
+        reservation_date: reservation.reservation_date ? new Date(reservation.reservation_date).toISOString().split('T')[0] : '',
         reservation_time: reservation.reservation_time.substring(0, 5), // Format time as HH:MM
         guest_count: reservation.guest_count,
         special_requests: reservation.special_requests || '',
@@ -39,25 +38,6 @@ export default function Edit({ reservation, users, statuses, sources }) {
                     {/* Form Card */}
                     <div className="rounded-lg bg-white p-6 shadow-sm border border-gray-200">
                         <form onSubmit={submit} className="space-y-6">
-                            {/* User Selection */}
-                            <div>
-                                <label htmlFor="user_id" className="block text-sm font-medium text-gray-700 mb-2">
-                                    Account User (Optional)
-                                </label>
-                                <select
-                                    id="user_id"
-                                    value={data.user_id}
-                                    onChange={(e) => setData('user_id', e.target.value)}
-                                    className="block w-full pl-4 pr-12 py-2 border border-gray-300 rounded-md bg-white focus:ring-blue-500 focus:border-blue-500"
-                                >
-                                    <option value="">No account (Guest)</option>
-                                    {users.map((user) => (
-                                        <option key={user.id} value={user.id}>{user.name} ({user.email})</option>
-                                    ))}
-                                </select>
-                                {errors.user_id && <p className="mt-1 text-sm text-red-600">{errors.user_id}</p>}
-                            </div>
-
                             <TextField
                                 label="Guest Name"
                                 id="name"

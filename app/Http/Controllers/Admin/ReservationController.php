@@ -48,7 +48,7 @@ class ReservationController extends Controller
             'reservations' => $reservations,
             'filters' => $request->only(['search', 'status', 'source', 'date']),
             'statuses' => ['pending', 'confirmed', 'seated', 'cancelled'],
-            'sources' => ['online', 'phone', 'walk-in'],
+            'sources' => ['website', 'phone', 'walk-in'],
         ]);
     }
 
@@ -62,7 +62,7 @@ class ReservationController extends Controller
         return Inertia::render('Admin/Reservations/Create', [
             'users' => $users,
             'statuses' => ['pending', 'confirmed', 'seated', 'cancelled'],
-            'sources' => ['online', 'phone', 'walk-in'],
+            'sources' => ['website', 'phone', 'walk-in'],
         ]);
     }
 
@@ -81,7 +81,7 @@ class ReservationController extends Controller
             'guest_count' => 'required|integer|min:1|max:20',
             'special_requests' => 'nullable|string|max:1000',
             'status' => 'required|in:pending,confirmed,seated,cancelled',
-            'source' => 'required|in:online,phone,walk-in',
+            'source' => 'required|in:website,phone,walk-in',
         ]);
 
         Reservation::create($request->all());
@@ -96,11 +96,17 @@ class ReservationController extends Controller
     {
         $users = User::select('id', 'name', 'email')->orderBy('name')->get();
 
+        $sources = ['website', 'phone', 'walk-in'];
+        
+        // Ensure the current reservation's source is in the sources array
+        if ($reservation->source && !in_array($reservation->source, $sources)) {
+            $sources[] = $reservation->source;
+        }
+
         return Inertia::render('Admin/Reservations/Edit', [
             'reservation' => $reservation->load('user'),
-            'users' => $users,
             'statuses' => ['pending', 'confirmed', 'seated', 'cancelled'],
-            'sources' => ['online', 'phone', 'walk-in'],
+            'sources' => $sources,
         ]);
     }
 
@@ -119,7 +125,7 @@ class ReservationController extends Controller
             'guest_count' => 'required|integer|min:1|max:20',
             'special_requests' => 'nullable|string|max:1000',
             'status' => 'required|in:pending,confirmed,seated,cancelled',
-            'source' => 'required|in:online,phone,walk-in',
+            'source' => 'required|in:website,phone,walk-in',
         ]);
 
         $reservation->update($request->all());
