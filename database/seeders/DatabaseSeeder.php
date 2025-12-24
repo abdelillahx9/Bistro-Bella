@@ -48,5 +48,14 @@ class DatabaseSeeder extends Seeder
 
         // Seed restaurant tables
         $this->call(\Database\Seeders\RestaurantTableSeeder::class);
+
+        // Seed blog categories
+        $this->call(\Database\Seeders\BlogCategorySeeder::class);
+
+        // Seed blog tags
+        $this->call(\Database\Seeders\BlogTagSeeder::class);
+
+        // Seed blog posts
+        $this->call(\Database\Seeders\BlogPostSeeder::class);
     }
 }

@@ -5,6 +5,8 @@ use App\Http\Controllers\Admin\Menu\MenuController;
 use App\Http\Controllers\Admin\Menu\MenuCategoriesController;
 use App\Http\Controllers\Admin\Menu\MenuReviewsController;
 use App\Http\Controllers\Admin\Menu\TagController;
+use App\Http\Controllers\Admin\Menu\MenuCommentsController;
+use App\Http\Controllers\Admin\Menu\MenuFavoritesController;
 
 // Group all admin routes
 Route::prefix('admin')->name('admin.')->middleware(['auth','verified','admin'])->group(function () {

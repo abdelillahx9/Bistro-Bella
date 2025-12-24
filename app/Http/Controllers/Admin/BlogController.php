@@ -21,18 +21,18 @@ class BlogController extends Controller
         $query = BlogPost::with(['category', 'tags'])
             ->orderBy('created_at', 'desc');
 
-        // Filter by status
-        if ($request->has('status') && $request->status !== '') {
+        // Filter by status - only apply if status is not empty
+        if ($request->filled('status')) {
             $query->where('status', $request->status);
         }
 
-        // Filter by category
-        if ($request->has('category') && $request->category !== '') {
+        // Filter by category - only apply if category is not empty
+        if ($request->filled('category')) {
             $query->where('blog_category_id', $request->category);
         }
 
-        // Search by title
-        if ($request->has('search') && $request->search !== '') {
+        // Search by title - only apply if search is not empty
+        if ($request->filled('search')) {
             $query->where('title', 'like', '%' . $request->search . '%');
         }
 
