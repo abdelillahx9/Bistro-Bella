@@ -81,7 +81,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
 // Admin CRUD routes
 Route::prefix('admin')->name('admin.')->middleware(['auth','verified','admin'])->group(function () {
-    Route::resource('users', \App\Http\Controllers\Admin\UserController::class);
+    Route::resource('users', \App\Http\Controllers\Admin\UserController::class)->only(['index', 'create', 'store', 'show']);
     Route::resource('reservations', ReservationController::class);
     Route::resource('tables', RestaurantTableController::class);
     Route::resource('contacts', ContactController::class)->only(['index', 'show']);
