@@ -1,13 +1,18 @@
 import PublicLayout from '@/Layouts/PublicLayout';
 import { Head, useForm } from '@inertiajs/react';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Calendar } from 'primereact/calendar';
+import { MultiSelect } from 'primereact/multiselect';
+import axios from 'axios';
 
 export default function Reservations({ userData }) {
     const [showNotification, setShowNotification] = useState(false);
     const [notificationMessage, setNotificationMessage] = useState('');
     const [notificationType, setNotificationType] = useState('success');
     const [selectedDate, setSelectedDate] = useState(null);
+    const [selectedTime, setSelectedTime] = useState(null);
+    const [availableTables, setAvailableTables] = useState([]);
+    const [selectedTables, setSelectedTables] = useState([]);
 
     const { data, setData, post, processing, errors, reset } = useForm({
         name: userData?.name || '',
@@ -16,8 +21,54 @@ export default function Reservations({ userData }) {
         reservation_date: '',
         reservation_time: '',
         guest_count: '',
+        tables: [],
         special_requests: '',
     });
+
+    const fetchAvailableTables = async () => {
+        if (data.reservation_date && data.reservation_time && data.guest_count) {
+            try {
+                const response = await axios.get(route('public.reservations.available-tables'), {
+                    params: {
+                        date: data.reservation_date,
+                        time: data.reservation_time,
+                        guests: data.guest_count
+                    }
+                });
+                setAvailableTables(response.data);
+                // Reset selected tables if they are no longer available
+                setSelectedTables(prev => prev.filter(table => 
+                    response.data.some(available => available.id === table.id)
+                ));
+            } catch (error) {
+                console.error('Error fetching available tables:', error);
+            }
+        } else {
+            setAvailableTables([]);
+            setSelectedTables([]);
+        }
+    };
+
+    useEffect(() => {
+        fetchAvailableTables();
+    }, [data.reservation_date, data.reservation_time, data.guest_count]);
+
+    useEffect(() => {
+        // Listen for real-time table availability updates
+        const channel = window.Echo.channel('table-availability');
+        channel.listen('.table.updated', (event) => {
+            // Refresh available tables if the update matches current selection
+            if (event.date === data.reservation_date && 
+                event.time === data.reservation_time && 
+                event.guests === data.guest_count) {
+                fetchAvailableTables();
+            }
+        });
+
+        return () => {
+            channel.stopListening('.table.updated');
+        };
+    }, [data.reservation_date, data.reservation_time, data.guest_count]);
 
     const submit = (e) => {
         e.preventDefault();
@@ -29,6 +80,8 @@ export default function Reservations({ userData }) {
                 setShowNotification(true);
                 reset();
                 setSelectedDate(null);
+                setSelectedTime(null);
+                setSelectedTables([]);
 
                 // Hide notification after 5 seconds
                 setTimeout(() => {
@@ -207,12 +260,25 @@ export default function Reservations({ userData }) {
                                     <label htmlFor="reservation_time" className="block text-sm font-medium text-gray-700 mb-2">
                                         Reservation Time *
                                     </label>
-                                    <input
-                                        type="time"
+                                    <Calendar
                                         id="reservation_time"
-                                        value={data.reservation_time}
-                                        onChange={e => setData('reservation_time', e.target.value)}
-                                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-colors duration-200 bg-white"
+                                        value={selectedTime}
+                                        onChange={(e) => {
+                                            setSelectedTime(e.value);
+                                            if (e.value) {
+                                                const hours = String(e.value.getHours()).padStart(2, '0');
+                                                const minutes = String(e.value.getMinutes()).padStart(2, '0');
+                                                setData('reservation_time', `${hours}:${minutes}`);
+                                            } else {
+                                                setData('reservation_time', '');
+                                            }
+                                        }}
+                                        timeOnly
+                                        hourFormat="24"
+                                        className="w-full"
+                                        inputClassName="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-colors duration-200 bg-white"
+                                        placeholder="Select reservation time"
+                                        inline
                                         required
                                     />
                                     {errors.reservation_time && <p className="mt-1 text-sm text-red-600">{errors.reservation_time}</p>}
@@ -241,6 +307,34 @@ export default function Reservations({ userData }) {
                                         <option value="8">8+ Guests</option>
                                     </select>
                                     {errors.guest_count && <p className="mt-1 text-sm text-red-600">{errors.guest_count}</p>}
+                                </div>
+
+                                {/* Table Selection Field */}
+                                <div>
+                                    <label htmlFor="tables" className="block text-sm font-medium text-gray-700 mb-2">
+                                        Select Tables *
+                                    </label>
+                                    <MultiSelect
+                                        id="tables"
+                                        value={selectedTables}
+                                        options={availableTables}
+                                        onChange={(e) => {
+                                            setSelectedTables(e.value);
+                                            setData('tables', e.value.map(table => table.id));
+                                        }}
+                                        optionLabel="label"
+                                        placeholder="Select available tables"
+                                        className="w-full"
+                                        panelClassName="w-full"
+                                        maxSelectedLabels={3}
+                                        selectedItemsLabel="{0} tables selected"
+                                        disabled={!data.reservation_date || !data.reservation_time || !data.guest_count}
+                                        required
+                                    />
+                                    {availableTables.length === 0 && data.reservation_date && data.reservation_time && data.guest_count && (
+                                        <p className="mt-1 text-sm text-orange-600">No tables available for the selected date and time.</p>
+                                    )}
+                                    {errors.tables && <p className="mt-1 text-sm text-red-600">{errors.tables}</p>}
                                 </div>
 
                                 {/* Special Requests Field */}

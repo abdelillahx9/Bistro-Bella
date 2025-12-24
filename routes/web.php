@@ -23,6 +23,7 @@ Route::get('/menu/category/{category}', [PublicController::class, 'getCategoryMe
 Route::get('/blog', [PublicController::class, 'blog'])->name('public.blog');
 Route::get('/reservations', [PublicController::class, 'reservations'])->name('public.reservations');
 Route::post('/reservations', [PublicController::class, 'storeReservation'])->name('public.reservations.store');
+Route::get('/reservations/available-tables', [PublicController::class, 'getAvailableTables'])->name('public.reservations.available-tables');
 Route::get('/about', [PublicController::class, 'about'])->name('public.about');
 Route::get('/contact', [PublicController::class, 'contact'])->name('public.contact');
 Route::post('/contact', [PublicController::class, 'storeContact'])->name('public.contact.store');

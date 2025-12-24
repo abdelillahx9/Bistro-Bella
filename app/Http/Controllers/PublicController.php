@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Mail\ReservationConfirmed;
+use App\Events\TableAvailabilityUpdated;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 use Inertia\Inertia;
@@ -82,6 +82,59 @@ class PublicController extends Controller
         ]);
     }
 
+    public function getAvailableTables(Request $request)
+    {
+        $request->validate([
+            'date' => 'required|date',
+            'time' => 'required|date_format:H:i',
+            'guests' => 'required|integer|min:1',
+        ]);
+
+        $date = $request->date;
+        $time = $request->time;
+        $guests = $request->guests;
+
+        // Get all active tables
+        $tables = \App\Models\RestaurantTable::where('is_active', true)->get();
+
+        $availableTables = [];
+
+        foreach ($tables as $table) {
+            // Check if table is available for this time slot
+            $isAvailable = !\App\Models\Reservation::where('reservation_date', $date)
+                ->whereIn('status', ['pending', 'confirmed', 'seated'])
+                ->whereHas('tables', function ($query) use ($table) {
+                    $query->where('table_id', $table->id);
+                })
+                ->where(function ($query) use ($time) {
+                    // Simple overlap check - assuming 2 hour duration
+                    $startTime = $time;
+                    $endTime = date('H:i', strtotime($time) + 7200); // +2 hours
+                    $query->whereBetween('reservation_time', [$startTime, $endTime])
+                          ->orWhere(function ($q) use ($startTime, $endTime) {
+                              $q->where('reservation_time', '<=', $startTime)
+                                ->whereRaw("ADDTIME(reservation_time, '02:00:00') > ?", [$startTime]);
+                          });
+                })
+                ->exists();
+
+            if ($isAvailable) {
+                $availableTables[] = [
+                    'id' => $table->id,
+                    'label' => $table->table_number . ' (Capacity: ' . $table->capacity . ')',
+                    'capacity' => $table->capacity,
+                ];
+            }
+        }
+
+        // Sort by capacity ascending
+        usort($availableTables, function ($a, $b) {
+            return $a['capacity'] <=> $b['capacity'];
+        });
+
+        return response()->json($availableTables);
+    }
+
     public function storeReservation(Request $request)
     {
         $validated = $request->validate([
@@ -91,6 +144,8 @@ class PublicController extends Controller
             'reservation_date' => 'required|date|after_or_equal:today',
             'reservation_time' => 'required|date_format:H:i',
             'guest_count' => 'required|integer|min:1|max:20',
+            'tables' => 'required|array|min:1',
+            'tables.*' => 'exists:restaurant_tables,id',
             'special_requests' => 'nullable|string|max:1000',
         ]);
 
@@ -106,6 +161,16 @@ class PublicController extends Controller
             'source' => 'website',
             'user_id' => auth()->id(), // Will be null for guests
         ]);
+
+        // Attach selected tables
+        $reservation->tables()->attach($validated['tables']);
+
+        // Broadcast table availability update
+        broadcast(new TableAvailabilityUpdated(
+            $validated['reservation_date'],
+            $validated['reservation_time'],
+            $validated['guest_count']
+        ));
 
         // Send confirmation email if email address is provided
         if ($validated['email']) {
