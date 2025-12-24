@@ -80,6 +80,13 @@ export default function AuthenticatedLayout({ header, children }) {
                     >
                         Reviews
                     </NavLink>
+                    <NavLink
+                        href={route('admin.users.index')}
+                        active={route().current('admin.users.index') || route().current('admin.users.create') || route().current('admin.users.edit')}
+                        className="flex w-full items-center px-4 py-2 text-left text-sm font-medium"
+                    >
+                        Users
+                    </NavLink>
 
                     {/* Add more NavLinks here as needed */}
                 </nav>
