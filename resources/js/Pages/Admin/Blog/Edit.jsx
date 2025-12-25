@@ -3,7 +3,8 @@ import { Head, useForm, Link } from '@inertiajs/react';
 import { useState, useEffect } from 'react';
 
 export default function Edit({ blogPost, categories, tags, selectedTags }) {
-    const { data, setData, put, processing, errors } = useForm({
+    const { data, setData, post, processing, errors } = useForm({
+        _method: 'PUT',
         title: blogPost.title || '',
         excerpt: blogPost.excerpt || '',
         content: blogPost.content || '',
@@ -43,7 +44,7 @@ export default function Edit({ blogPost, categories, tags, selectedTags }) {
 
     const submit = (e) => {
         e.preventDefault();
-        put(route('admin.blog.update', blogPost.id));
+        post(route('admin.blog.update', blogPost.id));
     };
 
     return (
