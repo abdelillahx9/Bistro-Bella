@@ -65,14 +65,29 @@ class PublicController extends Controller
         ]);
     }
 
-    public function blog()
+    public function blog(Request $request)
     {
-        $blogPosts = BlogPost::with(['category', 'tags'])
+        $query = BlogPost::with(['category', 'tags'])
             ->where('status', 'published')
-            ->where('published_at', '<=', now())
-            ->orderBy('published_at', 'desc')
-            ->get()
-            ->map(function ($post) {
+            ->where('published_at', '<=', now());
+
+        // Filter by Category
+        if ($request->has('category')) {
+            $query->whereHas('category', function ($q) use ($request) {
+                $q->where('slug', $request->category);
+            });
+        }
+
+        // Filter by Tag
+        if ($request->has('tag')) {
+            $query->whereHas('tags', function ($q) use ($request) {
+                $q->where('slug', $request->tag);
+            });
+        }
+
+        $blogPosts = $query->orderBy('published_at', 'desc')
+            ->paginate(6)
+            ->through(function ($post) {
                 return [
                     'id' => $post->id,
                     'title' => $post->title,
@@ -88,6 +103,10 @@ class PublicController extends Controller
                     'featured' => false,
                 ];
             });
+
+        if ($request->wantsJson() && !$request->header('X-Inertia')) {
+            return response()->json($blogPosts);
+        }
 
         $categories = BlogCategory::withCount(['blogPosts' => function ($query) {
             $query->where('status', 'published')
@@ -114,7 +133,8 @@ class PublicController extends Controller
         return Inertia::render('Public/Blog', [
             'blogPosts' => $blogPosts,
             'categories' => $categories,
-            'tags' => $tags
+            'tags' => $tags,
+            'filters' => $request->only(['category', 'tag'])
         ]);
     }
 
