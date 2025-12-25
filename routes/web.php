@@ -98,6 +98,7 @@ Route::prefix('admin')->name('admin.')->middleware(['auth','verified','admin'])-
 
     // Blog management
     Route::resource('blog', \App\Http\Controllers\Admin\BlogController::class);
+    Route::resource('blog-categories', \App\Http\Controllers\Admin\BlogCategoryController::class);
     Route::resource('blog-tags', \App\Http\Controllers\Admin\BlogTagController::class);
 });
 

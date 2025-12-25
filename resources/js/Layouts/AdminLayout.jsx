@@ -88,6 +88,13 @@ export default function AuthenticatedLayout({ header, children }) {
                         Blog Posts
                     </NavLink>
                     <NavLink
+                        href={route('admin.blog-categories.index')}
+                        active={route().current('admin.blog-categories.index') || route().current('admin.blog-categories.create') || route().current('admin.blog-categories.edit')}
+                        className="flex w-full items-center px-4 py-2 text-left text-sm font-medium"
+                    >
+                        Blog Categories
+                    </NavLink>
+                    <NavLink
                         href={route('admin.blog-tags.index')}
                         active={route().current('admin.blog-tags.index') || route().current('admin.blog-tags.create') || route().current('admin.blog-tags.edit')}
                         className="flex w-full items-center px-4 py-2 text-left text-sm font-medium"
