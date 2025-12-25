@@ -107,37 +107,38 @@ class BlogController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(BlogPost $blogPost)
+    public function show(BlogPost $blog)
     {
-        $blogPost->load(['category', 'tags']);
+        // dd($blogPost);
+        $blog->load(['category', 'tags']);
 
         return Inertia::render('Admin/Blog/Show', [
-            'blogPost' => $blogPost
+            'blogPost' => $blog
         ]);
     }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(BlogPost $blogPost)
+    public function edit(BlogPost $blog)
     {
-        $blogPost->load(['category', 'tags']);
+        $blog->load(['category', 'tags']);
 
         $categories = BlogCategory::all();
         $tags = BlogTag::all();
 
         return Inertia::render('Admin/Blog/Edit', [
-            'blogPost' => $blogPost,
+            'blogPost' => $blog,
             'categories' => $categories,
             'tags' => $tags,
-            'selectedTags' => $blogPost->tags->pluck('id')->toArray()
+            'selectedTags' => $blog->tags->pluck('id')->toArray()
         ]);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, BlogPost $blogPost)
+    public function update(Request $request, BlogPost $blog)
     {
         $validated = $request->validate([
             'title' => 'required|string|max:255',
@@ -155,31 +156,31 @@ class BlogController extends Controller
         ]);
 
         // Update slug if title changed
-        if ($blogPost->title !== $validated['title']) {
-            $validated['slug'] = $this->generateUniqueSlug($validated['title'], $blogPost->id);
+        if ($blog->title !== $validated['title']) {
+            $validated['slug'] = $this->generateUniqueSlug($validated['title'], $blog->id);
         }
 
         // Handle featured image upload
         if ($request->hasFile('featured_image')) {
             // Delete old image
-            if ($blogPost->featured_image) {
-                Storage::disk('public')->delete($blogPost->featured_image);
+            if ($blog->featured_image) {
+                Storage::disk('public')->delete($blog->featured_image);
             }
             $validated['featured_image'] = $request->file('featured_image')->store('blog-images', 'public');
         }
 
         // Set published_at for published posts
-        if ($validated['status'] === 'published' && $blogPost->status !== 'published') {
+        if ($validated['status'] === 'published' && $blog->status !== 'published') {
             $validated['published_at'] = $validated['published_at'] ?? now();
         }
 
-        $blogPost->update($validated);
+        $blog->update($validated);
 
         // Sync tags
         if (isset($validated['tags'])) {
-            $blogPost->tags()->sync($validated['tags']);
+            $blog->tags()->sync($validated['tags']);
         } else {
-            $blogPost->tags()->detach();
+            $blog->tags()->detach();
         }
 
         return redirect()->route('admin.blog.index')->with('success', 'Blog post updated successfully.');
@@ -188,17 +189,17 @@ class BlogController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(BlogPost $blogPost)
+    public function destroy(BlogPost $blog)
     {
         // Delete featured image
-        if ($blogPost->featured_image) {
-            Storage::disk('public')->delete($blogPost->featured_image);
+        if ($blog->featured_image) {
+            Storage::disk('public')->delete($blog->featured_image);
         }
 
         // Detach tags
-        $blogPost->tags()->detach();
+        $blog->tags()->detach();
 
-        $blogPost->delete();
+        $blog->delete();
 
         return redirect()->route('admin.blog.index')->with('success', 'Blog post deleted successfully.');
     }
