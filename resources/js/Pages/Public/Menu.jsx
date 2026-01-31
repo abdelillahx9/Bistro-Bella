@@ -42,25 +42,27 @@ export default function Menu() {
             <div className="bg-white min-h-screen py-20">
                 <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
                     
-                    {/* Centered Category Navigation */}
-                    <nav className="flex flex-wrap justify-center items-center gap-x-8 gap-y-4 mb-20 border-b border-gray-100 pb-8">
-                        {categories.map((category) => (
-                            <button
-                                key={category.id}
-                                onClick={() => handleCategoryClick(category)}
-                                className={`text-xs md:text-sm font-bold uppercase tracking-[0.2em] transition-all duration-300 relative pb-1 ${
-                                    activeCategoryId === category.id
-                                        ? 'text-orange-600'
-                                        : 'text-gray-400 hover:text-gray-600'
-                                }`}
-                            >
-                                {category.name}
-                                {activeCategoryId === category.id && (
-                                    <span className="absolute -bottom-8 left-0 w-full h-0.5 bg-orange-600" />
-                                )}
-                            </button>
-                        ))}
-                    </nav>
+                    {/* Centered Category Navigation - Responsive Mobile Scroll */}
+                    <div className="mb-20 border-b border-gray-100">
+                        <nav className="flex overflow-x-auto md:flex-wrap md:justify-center items-center gap-x-8 gap-y-4 pb-8 no-scrollbar scroll-smooth">
+                            {categories.map((category) => (
+                                <button
+                                    key={category.id}
+                                    onClick={() => handleCategoryClick(category)}
+                                    className={`text-[10px] md:text-sm font-bold uppercase tracking-[0.2em] transition-all duration-300 relative pb-1 whitespace-nowrap flex-shrink-0 ${
+                                        activeCategoryId === category.id
+                                            ? 'text-orange-600'
+                                            : 'text-gray-400 hover:text-gray-600'
+                                    }`}
+                                >
+                                    {category.name}
+                                    {activeCategoryId === category.id && (
+                                        <span className="absolute -bottom-8 left-0 w-full h-0.5 bg-orange-600" />
+                                    )}
+                                </button>
+                            ))}
+                        </nav>
+                    </div>
 
                     {/* Menu Content */}
                     {loading ? (
