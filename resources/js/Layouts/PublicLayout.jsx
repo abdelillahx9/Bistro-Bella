@@ -1,4 +1,5 @@
 import { Link, usePage } from '@inertiajs/react';
+import { useState } from 'react';
 import ApplicationLogo from '@/Components/ApplicationLogo';
 import Dropdown from '@/Components/Dropdown';
 
@@ -6,6 +7,7 @@ export default function PublicLayout({ children }) {
     const { auth, url, component } = usePage().props;
     const user = auth?.user;
     const isAuthenticated = !!user;
+    const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
     const isHome = (typeof window !== 'undefined' && typeof route === 'function' && route().current('public.home')) || url === '/' || component === 'Public/Home';
 
     return (
@@ -195,7 +197,7 @@ export default function PublicLayout({ children }) {
                         <div className="flex items-center space-x-3 ml-4 z-10">
                             {isAuthenticated ? (
                                 // User dropdown for authenticated users
-                                <div className="flex items-center space-x-3">
+                                <div className="hidden md:flex items-center space-x-3">
                                     <div className="flex items-center space-x-2 bg-gray-50 px-3 py-2 rounded-lg">
                                         <div className="w-8 h-8 rounded-full overflow-hidden flex items-center justify-center">
                                             {user.profile_picture ? (
@@ -240,19 +242,74 @@ export default function PublicLayout({ children }) {
                                 <>
                                     <Link
                                         href="/login"
-                                        className="text-gray-700 hover:text-orange-600 px-4 py-2 text-sm font-medium transition-colors duration-200 border border-gray-300 hover:border-orange-300 rounded-lg hover:bg-orange-50"
+                                        className="hidden md:inline-flex text-gray-700 hover:text-orange-600 px-4 py-2 text-sm font-medium transition-colors duration-200 border border-gray-300 hover:border-orange-300 rounded-lg hover:bg-orange-50"
                                     >
                                         Sign In
                                     </Link>
                                     <Link
                                         href="/reservations"
-                                        className="bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 shadow-md hover:shadow-lg transform hover:scale-105"
+                                        className="hidden md:inline-flex bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 shadow-md hover:shadow-lg transform hover:scale-105"
                                     >
                                         Reserve a Table
                                     </Link>
                                 </>
                             )}
+
+                            {/* Mobile menu button */}
+                            <button
+                                onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+                                className="md:hidden inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none transition duration-150 ease-in-out"
+                            >
+                                <svg className="h-6 w-6" stroke="currentColor" fill="none" viewBox="0 0 24 24">
+                                    {isMobileMenuOpen ? (
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
+                                    ) : (
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h16" />
+                                    )}
+                                </svg>
+                            </button>
                         </div>
+                    </div>
+                </div>
+
+                {/* Mobile Menu Overlay */}
+                <div className={`${isMobileMenuOpen ? 'block' : 'hidden'} md:hidden bg-white border-t border-gray-100 shadow-lg`}>
+                    <div className="px-2 pt-2 pb-3 space-y-1">
+                        {isAuthenticated ? (
+                            <>
+                                <Link href="/home" className="block px-3 py-3 rounded-md text-base font-medium text-gray-700 hover:text-orange-600 hover:bg-orange-50">Dashboard</Link>
+                                <Link href="/menu" className="block px-3 py-3 rounded-md text-base font-medium text-gray-700 hover:text-orange-600 hover:bg-orange-50">Menu</Link>
+                                <Link href="/blog" className="block px-3 py-3 rounded-md text-base font-medium text-gray-700 hover:text-orange-600 hover:bg-orange-50">Blog</Link>
+                                <Link href="/reservations" className="block px-3 py-3 rounded-md text-base font-medium text-gray-700 hover:text-orange-600 hover:bg-orange-50">Reservations</Link>
+                                <div className="border-t border-gray-100 my-2 pt-2">
+                                    <div className="flex items-center px-3 py-2">
+                                        <div className="flex-shrink-0">
+                                            {user.profile_picture ? (
+                                                <img className="h-10 w-10 rounded-full object-cover" src={`/storage/${user.profile_picture}`} alt={user.name} />
+                                            ) : (
+                                                <div className="h-10 w-10 rounded-full bg-orange-500 flex items-center justify-center text-white font-bold">{user.name.charAt(0).toUpperCase()}</div>
+                                            )}
+                                        </div>
+                                        <div className="ml-3">
+                                            <div className="text-base font-medium text-gray-800">{user.name}</div>
+                                            <div className="text-sm font-medium text-gray-500">{user.email}</div>
+                                        </div>
+                                    </div>
+                                    <Link href={route('profile.edit')} className="block px-3 py-2 rounded-md text-base font-medium text-gray-500 hover:text-orange-600 hover:bg-orange-50">Profile</Link>
+                                    <Link href={route('logout')} method="post" as="button" className="w-full text-left block px-3 py-2 rounded-md text-base font-medium text-gray-500 hover:text-orange-600 hover:bg-orange-50">Logout</Link>
+                                </div>
+                            </>
+                        ) : (
+                            <>
+                                <Link href="/" className="block px-3 py-3 rounded-md text-base font-medium text-gray-700 hover:text-orange-600 hover:bg-orange-50">Home</Link>
+                                <Link href="/menu" className="block px-3 py-3 rounded-md text-base font-medium text-gray-700 hover:text-orange-600 hover:bg-orange-50">Menu</Link>
+                                <Link href="/blog" className="block px-3 py-3 rounded-md text-base font-medium text-gray-700 hover:text-orange-600 hover:bg-orange-50">Blog</Link>
+                                <Link href="/reservations" className="block px-3 py-3 rounded-md text-base font-medium text-gray-700 hover:text-orange-600 hover:bg-orange-50 font-bold text-orange-600">Reserve a Table</Link>
+                                <Link href="/about" className="block px-3 py-3 rounded-md text-base font-medium text-gray-700 hover:text-orange-600 hover:bg-orange-50">About</Link>
+                                <Link href="/contact" className="block px-3 py-3 rounded-md text-base font-medium text-gray-700 hover:text-orange-600 hover:bg-orange-50">Contact</Link>
+                                <Link href="/login" className="block px-3 py-3 rounded-md text-base font-medium text-gray-700 hover:text-orange-600 hover:bg-orange-50">Sign In</Link>
+                            </>
+                        )}
                     </div>
                 </div>
             </nav>
