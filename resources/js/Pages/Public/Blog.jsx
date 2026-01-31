@@ -39,7 +39,7 @@ export default function Blog({ blogPosts, categories, tags, filters = {} }) {
                         <p className="text-lg text-gray-600">Stories, recipes, and news from Bistro Bella</p>
                         {(filters.category || filters.tag) && (
                             <div className="mt-4">
-                                <Link href="/blog" className="text-blue-600 hover:underline">
+                                <Link href="/blog" className="text-orange-600 hover:underline">
                                     Clear Filters
                                 </Link>
                             </div>
@@ -71,14 +71,14 @@ export default function Blog({ blogPosts, categories, tags, filters = {} }) {
                                                     </div>
                                                     <div className="md:w-2/3 p-6">
                                                         <div className="flex items-center text-sm text-gray-500 mb-2">
-                                                            <span className="bg-blue-100 text-blue-800 px-2 py-1 rounded-full text-xs font-medium">
+                                                            <span className="bg-orange-100 text-orange-800 px-2 py-1 rounded-full text-xs font-medium">
                                                                 {post.category}
                                                             </span>
                                                             <span className="mx-2">•</span>
                                                             <span>{post.read_time} min read</span>
                                                         </div>
                                                         <h3 className="text-xl font-semibold text-gray-800 mb-2">
-                                                            <Link href={`/blog/${post.slug}`} className="hover:text-blue-600 transition-colors">
+                                                            <Link href={`/blog/${post.slug}`} className="hover:text-orange-600 transition-colors">
                                                                 {post.title}
                                                             </Link>
                                                         </h3>
@@ -129,7 +129,7 @@ export default function Blog({ blogPosts, categories, tags, filters = {} }) {
                                             key={category.slug}
                                             href={`/blog?category=${category.slug}`}
                                             className={`flex items-center justify-between transition-colors ${
-                                                filters.category === category.slug ? 'text-blue-600 font-medium' : 'text-gray-600 hover:text-blue-600'
+                                                filters.category === category.slug ? 'text-orange-600 font-medium' : 'text-gray-600 hover:text-orange-600'
                                             }`}
                                         >
                                             <span>{category.name}</span>
@@ -151,8 +151,8 @@ export default function Blog({ blogPosts, categories, tags, filters = {} }) {
                                             href={`/blog?tag=${tag.slug}`}
                                             className={`px-3 py-1 rounded-full text-sm transition-colors ${
                                                 filters.tag === tag.slug
-                                                    ? 'bg-blue-100 text-blue-700'
-                                                    : 'bg-gray-100 text-gray-700 hover:bg-blue-100 hover:text-blue-700'
+                                                    ? 'bg-orange-100 text-orange-700'
+                                                    : 'bg-gray-100 text-gray-700 hover:bg-orange-100 hover:text-orange-700'
                                             }`}
                                         >
                                             #{tag.name} ({tag.count})
@@ -162,14 +162,14 @@ export default function Blog({ blogPosts, categories, tags, filters = {} }) {
                             </div>
 
                             {/* Call to Action */}
-                            <div className="bg-gradient-to-r from-blue-600 to-blue-700 rounded-lg shadow-md p-6 text-white">
+                            <div className="bg-gradient-to-r from-orange-600 to-orange-700 rounded-lg shadow-md p-6 text-white">
                                 <h3 className="text-lg font-semibold mb-2">Ready to Experience Bistro Bella?</h3>
-                                <p className="text-blue-100 mb-4 text-sm">
+                                <p className="text-orange-100 mb-4 text-sm">
                                     Inspired by our blog? Come taste our culinary creations in person.
                                 </p>
                                 <Link
                                     href="/reservations"
-                                    className="inline-block bg-white text-blue-600 px-4 py-2 rounded-lg font-medium hover:bg-blue-50 transition-colors"
+                                    className="inline-block bg-white text-orange-600 px-4 py-2 rounded-lg font-medium hover:bg-orange-50 transition-colors"
                                 >
                                     Make a Reservation
                                 </Link>
