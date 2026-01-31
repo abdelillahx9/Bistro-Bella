@@ -124,7 +124,7 @@
 
         <div class="urgent-note">
             <h4>⚠️ Important Reminder</h4>
-            <p>Your reservation is still <strong>pending confirmation</strong>. Please contact us immediately if you need to modify or cancel your reservation.</p>
+            <p>Your reservation is <strong>confirmed</strong> and we are preparing for your arrival. Please contact us immediately if you need to modify or cancel your reservation.</p>
         </div>
 
         <div class="reservation-details">

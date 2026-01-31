@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Events\TableAvailabilityUpdated;
 use App\Mail\ReservationConfirmed;
+use App\Mail\ReservationReceived;
 use App\Models\BlogPost;
 use App\Models\BlogCategory;
 use App\Models\BlogTag;
@@ -298,7 +299,7 @@ class PublicController extends Controller
 
         // Send confirmation email if email address is provided
         if ($validated['email']) {
-            Mail::to($validated['email'])->send(new ReservationConfirmed($reservation));
+            Mail::to($validated['email'])->send(new ReservationReceived($reservation));
         }
 
         return redirect()->back()->with('success', 'Your reservation has been submitted successfully! We will contact you shortly to confirm.');

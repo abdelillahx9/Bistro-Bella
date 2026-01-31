@@ -22,19 +22,19 @@ class SendReservationReminders extends Command
      *
      * @var string
      */
-    protected $description = 'Send reminder emails for upcoming reservations that are not yet confirmed';
+    protected $description = 'Send reminder emails for upcoming confirmed reservations';
 
     /**
      * Execute the console command.
      */
     public function handle()
     {
-        $this->info('Checking for reservations needing reminders...');
+        $this->info('Checking for confirmed reservations needing reminders...');
 
-        // Get reservations that are 30 minutes from now and still pending
+        // Get reservations that are exactly 30 minutes from now and confirmed
         $thirtyMinutesFromNow = Carbon::now()->addMinutes(30);
 
-        $reservations = Reservation::where('status', 'pending')
+        $reservations = Reservation::where('status', 'confirmed')
             ->where('reminder_sent', false)
             ->whereNotNull('email')
             ->where('reservation_date', '>=', Carbon::today())

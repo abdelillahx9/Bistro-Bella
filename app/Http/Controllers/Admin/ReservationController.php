@@ -5,7 +5,9 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Reservation;
 use App\Models\User;
+use App\Mail\ReservationConfirmed;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 use Inertia\Inertia;
 
 class ReservationController extends Controller
@@ -84,7 +86,11 @@ class ReservationController extends Controller
             'source' => 'required|in:website,phone,walk-in',
         ]);
 
-        Reservation::create($request->all());
+        $reservation = Reservation::create($request->all());
+
+        if ($reservation->status === 'confirmed' && $reservation->email) {
+            Mail::to($reservation->email)->send(new ReservationConfirmed($reservation));
+        }
 
         return redirect()->route('admin.reservations.index')->with('success', 'Reservation created successfully.');
     }
@@ -128,7 +134,12 @@ class ReservationController extends Controller
             'source' => 'required|in:website,phone,walk-in',
         ]);
 
+        $oldStatus = $reservation->status;
         $reservation->update($request->all());
+
+        if ($request->status === 'confirmed' && $oldStatus !== 'confirmed' && $reservation->email) {
+            Mail::to($reservation->email)->send(new ReservationConfirmed($reservation));
+        }
 
         return redirect()->route('admin.reservations.index')->with('success', 'Reservation updated successfully.');
     }
@@ -142,7 +153,13 @@ class ReservationController extends Controller
             'status' => 'required|in:pending,confirmed,seated,cancelled',
         ]);
 
+        $oldStatus = $reservation->status;
         $reservation->update(['status' => $request->status]);
+
+        // Send confirmation email if status changed to confirmed
+        if ($request->status === 'confirmed' && $oldStatus !== 'confirmed' && $reservation->email) {
+            Mail::to($reservation->email)->send(new ReservationConfirmed($reservation));
+        }
 
         return back()->with('success', 'Reservation status updated successfully.');
     }
