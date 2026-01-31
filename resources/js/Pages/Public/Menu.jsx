@@ -71,11 +71,11 @@ export default function Menu() {
                             </div>
                         </div>
                     ) : activeCategory ? (
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-x-16 gap-y-20">
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-12">
                             {activeCategory.menus.length > 0 ? (
                                 activeCategory.menus.map((item) => (
-                                    <div key={item.id} className="flex flex-col group">
-                                        <div className="aspect-square w-full bg-gray-50 rounded-sm overflow-hidden mb-8 shadow-sm">
+                                    <div key={item.id} className="flex items-start gap-6 group">
+                                        <div className="flex-shrink-0 w-24 h-24 md:w-28 md:h-28 bg-gray-50 rounded-sm overflow-hidden shadow-sm">
                                             {item.image_path ? (
                                                 <img
                                                     src={item.image_path.startsWith('http') ? item.image_path : (item.image_path.startsWith('menus/') ? `/storage/${item.image_path}` : item.image_path)}
@@ -83,15 +83,20 @@ export default function Menu() {
                                                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-1000 ease-out"
                                                 />
                                             ) : (
-                                                <div className="w-full h-full flex items-center justify-center text-gray-200 text-6xl font-light italic bg-gray-50 border border-gray-100">
+                                                <div className="w-full h-full flex items-center justify-center text-gray-200 text-3xl font-light italic bg-gray-50 border border-gray-100">
                                                     {item.name.charAt(0)}
                                                 </div>
                                             )}
                                         </div>
-                                        <div>
-                                            <h3 className="text-2xl font-bold text-gray-900 mb-3 tracking-tight">
-                                                {item.name}
-                                            </h3>
+                                        <div className="flex-1">
+                                            <div className="flex justify-between items-baseline mb-2">
+                                                <h3 className="text-lg font-bold text-gray-900 tracking-tight">
+                                                    {item.name}
+                                                </h3>
+                                                <span className="text-orange-600 font-medium text-sm ml-4">
+                                                    ${item.price}
+                                                </span>
+                                            </div>
                                             <p className="text-gray-500 text-sm leading-relaxed font-normal">
                                                 {item.description}
                                             </p>
