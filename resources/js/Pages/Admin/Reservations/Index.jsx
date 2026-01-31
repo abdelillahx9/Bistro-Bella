@@ -2,6 +2,7 @@ import AuthenticatedLayout from '@/Layouts/AdminLayout';
 import { Head, Link, router } from '@inertiajs/react';
 import { useState, useEffect } from 'react';
 import Pagination from '@/Components/Pagination';
+import Dropdown from '@/Components/Dropdown';
 
 export default function ReservationsIndex({ reservations, filters, statuses, sources }) {
     const [search, setSearch] = useState(filters.search || '');
@@ -37,6 +38,14 @@ export default function ReservationsIndex({ reservations, filters, statuses, sou
         setShowStatusFilter(false);
         setShowSourceFilter(false);
         setShowDateFilter(false);
+    };
+
+    const updateStatus = (reservationId, newStatus) => {
+        router.patch(route('admin.reservations.update-status', reservationId), {
+            status: newStatus
+        }, {
+            preserveScroll: true,
+        });
     };
 
     const formatTime = (timeString) => {
@@ -251,9 +260,36 @@ export default function ReservationsIndex({ reservations, filters, statuses, sou
                                         </td>
                                         <td className="px-6 py-4 whitespace-nowrap text-[14px] font-normal font-sans text-gray-500">{reservation.guest_count}</td>
                                         <td className="px-6 py-4 whitespace-nowrap">
-                                            <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${reservation.status === 'pending' ? 'bg-yellow-100 text-yellow-800' : reservation.status === 'confirmed' ? 'bg-green-100 text-green-800' : reservation.status === 'seated' ? 'bg-blue-100 text-blue-800' : 'bg-red-100 text-red-800'}`}>
-                                                {reservation.status.charAt(0).toUpperCase() + reservation.status.slice(1)}
-                                            </span>
+                                            <Dropdown>
+                                                <Dropdown.Trigger>
+                                                    <button 
+                                                        className={`inline-flex px-3 py-1 text-xs font-semibold rounded-full transition-all duration-200 hover:opacity-80 ${
+                                                            reservation.status === 'pending' ? 'bg-yellow-100 text-yellow-800' : 
+                                                            reservation.status === 'confirmed' ? 'bg-green-100 text-green-800' : 
+                                                            reservation.status === 'seated' ? 'bg-blue-100 text-blue-800' : 
+                                                            'bg-red-100 text-red-800'
+                                                        }`}
+                                                    >
+                                                        {reservation.status.charAt(0).toUpperCase() + reservation.status.slice(1)}
+                                                        <svg className="ml-1 w-3 h-3 self-center" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                                                        </svg>
+                                                    </button>
+                                                </Dropdown.Trigger>
+                                                <Dropdown.Content align="left" contentClasses="py-1 bg-white">
+                                                    {statuses.map((s) => (
+                                                        <button
+                                                            key={s}
+                                                            onClick={() => updateStatus(reservation.id, s)}
+                                                            className={`block w-full text-left px-4 py-2 text-xs hover:bg-gray-100 transition-colors duration-150 ${
+                                                                reservation.status === s ? 'font-bold bg-gray-50' : 'text-gray-700'
+                                                            }`}
+                                                        >
+                                                            {s.charAt(0).toUpperCase() + s.slice(1)}
+                                                        </button>
+                                                    ))}
+                                                </Dropdown.Content>
+                                            </Dropdown>
                                         </td>
                                         <td className="px-6 py-4 whitespace-nowrap">
                                             <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${reservation.source === 'online' ? 'bg-blue-100 text-blue-800' : reservation.source === 'phone' ? 'bg-green-100 text-green-800' : 'bg-purple-100 text-purple-800'}`}>

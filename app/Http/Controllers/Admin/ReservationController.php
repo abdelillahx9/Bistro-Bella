@@ -134,6 +134,20 @@ class ReservationController extends Controller
     }
 
     /**
+     * Update the status of the specified resource.
+     */
+    public function updateStatus(Request $request, Reservation $reservation)
+    {
+        $request->validate([
+            'status' => 'required|in:pending,confirmed,seated,cancelled',
+        ]);
+
+        $reservation->update(['status' => $request->status]);
+
+        return back()->with('success', 'Reservation status updated successfully.');
+    }
+
+    /**
      * Remove the specified resource from storage.
      */
     public function destroy(Reservation $reservation)
